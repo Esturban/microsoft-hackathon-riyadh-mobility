@@ -4,9 +4,8 @@ metadata:
 services:
   web:
     project: .
+    language: py
     host: containerapp
-    language: python
-    docker:
-      path: ./Dockerfile
 infra:
+  provider: bicep
   path: infra

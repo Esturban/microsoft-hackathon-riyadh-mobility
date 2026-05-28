@@ -27,6 +27,9 @@ resource env 'Microsoft.App/managedEnvironments@2024-03-01' = {
 resource app 'Microsoft.App/containerApps@2024-03-01' = {
   name: containerAppName
   location: location
+  identity: {
+    type: 'SystemAssigned'
+  }
   properties: {
     managedEnvironmentId: env.id
     configuration: {
@@ -87,3 +90,4 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = {
 }
 
 output url string = app.properties.configuration.ingress.fqdn
+output principalId string = app.identity.principalId

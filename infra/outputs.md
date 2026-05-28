@@ -1,6 +1,7 @@
 # Infra Outputs
 
-- Container App URL
-- Storage account name
-- Cosmos endpoint
-- Azure Maps key is injected as a Container App secret
+- `WEB_APP_URL`
+- `AZURE_MAPS_ACCOUNT_NAME`
+- `STORAGE_ACCOUNT_NAME`
+- `COSMOS_DATABASE_NAME`
+- `RESOURCE_GROUP_NAME`

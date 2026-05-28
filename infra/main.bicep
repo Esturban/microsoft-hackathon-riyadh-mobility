@@ -8,12 +8,12 @@ param enableEventHubs bool = false
 
 var suffix = uniqueString(resourceGroup().id, envName)
 var storageName = 'striyadh${take(suffix, 15)}'
-var cosmosName = 'cosmos-riyadh-${envName}'
-var mapsName = 'maps-riyadh-${envName}'
-var logName = 'log-riyadh-${envName}'
-var appInsightsName = 'appi-riyadh-${envName}'
-var containerEnvName = 'cae-riyadh-${envName}'
-var containerAppName = 'ca-riyadh-api-${envName}'
+var cosmosName = 'cosmos-riyadh-mobility-${envName}'
+var mapsName = 'maps-riyadh-mobility-${envName}'
+var logName = 'log-riyadh-mobility-${envName}'
+var appInsightsName = 'appi-riyadh-mobility-${envName}'
+var containerEnvName = 'cae-riyadh-mobility-${envName}'
+var containerAppName = 'ca-riyadh-mobility-api-${envName}'
 
 module monitoring './modules/monitoring.bicep' = {
   name: 'monitoring'
@@ -74,6 +74,21 @@ module optionalEventHubs './modules/optional-eventhubs.bicep' = if (enableEventH
   }
 }
 
-output containerAppUrl string = containerApp.outputs.url
-output storageAccountName string = storageName
-output cosmosEndpoint string = cosmos.outputs.endpoint
+resource blobReaderRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(storage.outputs.storageAccountId, containerApp.outputs.principalId, 'blob-reader')
+  scope: resourceId('Microsoft.Storage/storageAccounts', storageName)
+  properties: {
+    principalId: containerApp.outputs.principalId
+    roleDefinitionId: subscriptionResourceId(
+      'Microsoft.Authorization/roleDefinitions',
+      '2a2b9908-6ea1-4ae2-8e65-a410df84e7d1'
+    )
+    principalType: 'ServicePrincipal'
+  }
+}
+
+output WEB_APP_URL string = containerApp.outputs.url
+output AZURE_MAPS_ACCOUNT_NAME string = mapsName
+output STORAGE_ACCOUNT_NAME string = storageName
+output COSMOS_DATABASE_NAME string = 'mobilitydb'
+output RESOURCE_GROUP_NAME string = resourceGroup().name

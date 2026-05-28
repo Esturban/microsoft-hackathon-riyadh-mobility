@@ -24,4 +24,5 @@ resource processedContainer 'Microsoft.Storage/storageAccounts/blobServices/cont
   }
 }
 
+output storageAccountId string = storage.id
 output connectionString string = 'DefaultEndpointsProtocol=https;AccountName=${storage.name};AccountKey=${listKeys(storage.id, storage.apiVersion).keys[0].value};EndpointSuffix=${environment().suffixes.storage}'
