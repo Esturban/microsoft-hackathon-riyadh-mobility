@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Riyadh Mobility Intelligence Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/3/atlas.min.css"
+    />
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Hackathon Starter</p>
+          <h1>Riyadh Mobility Intelligence Dashboard</h1>
+          <p class="subtitle">
+            Public mobility layers, district accessibility scoring, and Azure-ready deployment in one beginner-friendly MVP.
+          </p>
+        </div>
+        <div class="status-wrap">
+          <span id="data-status-badge" class="badge">Loading data mode…</span>
+          <span id="maps-status-badge" class="badge badge-muted">Checking map mode…</span>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="map-card">
+          <div class="toolbar">
+            <label><input type="checkbox" id="toggle-metro" checked /> Metro</label>
+            <label><input type="checkbox" id="toggle-bus" checked /> Bus</label>
+            <label><input type="checkbox" id="toggle-events" checked /> Live events</label>
+            <select id="district-select"></select>
+          </div>
+          <div id="map"></div>
+          <p id="map-fallback" class="map-fallback hidden">
+            Azure Maps key not configured. The app is showing a simplified local canvas while the API and scoring still work.
+          </p>
+        </section>
+
+        <aside class="side-panel">
+          <section class="kpis">
+            <article class="kpi">
+              <span>Metro routes</span>
+              <strong id="kpi-metro">0</strong>
+            </article>
+            <article class="kpi">
+              <span>Bus routes</span>
+              <strong id="kpi-bus">0</strong>
+            </article>
+            <article class="kpi">
+              <span>Selected district</span>
+              <strong id="kpi-district">None</strong>
+            </article>
+            <article class="kpi accent">
+              <span>Accessibility score</span>
+              <strong id="kpi-score">0</strong>
+            </article>
+          </section>
+
+          <section class="panel">
+            <h2>Score explanation</h2>
+            <p id="score-text">Select a district to calculate its score.</p>
+            <p class="disclaimer">
+              This score is a hackathon-friendly proxy. It is not a formal transport-planning model. It is designed to show how public mobility data, cloud storage, and simple analytics can support district-level planning conversations.
+            </p>
+          </section>
+
+          <section class="panel">
+            <h2>Debug panel</h2>
+            <pre id="debug-panel">Loading…</pre>
+          </section>
+        </aside>
+      </main>
+    </div>
+
+    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/3/atlas.min.js"></script>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
