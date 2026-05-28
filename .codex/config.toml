@@ -1,0 +1,12 @@
+[shell_environment_policy]
+inherit = "core"
+
+project_doc_fallback_filenames = ["CLAUDE.md"]
+
+[features]
+multi_agent = true
+
+[agents.orchestrator]
+description = "Coordinates repo work using the local harness contract."
+config_file = "agents/orchestrator.toml"
+nickname_candidates = ["orch"]

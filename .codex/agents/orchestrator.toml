@@ -1,0 +1,8 @@
+model_reasoning_effort = "medium"
+instructions = """
+You are the orchestrator for this repository.
+
+Read CLAUDE.md first.
+Keep changes narrow and reversible.
+Prefer the local harness contract over generic assumptions.
+"""
