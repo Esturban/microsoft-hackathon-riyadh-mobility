@@ -4,9 +4,6 @@
   "parameters": {
     "envName": {
       "value": "dev"
-    },
-    "appName": {
-      "value": "riyadh-mobility"
     }
   }
 }

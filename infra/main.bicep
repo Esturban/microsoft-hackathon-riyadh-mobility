@@ -2,7 +2,6 @@ targetScope = 'resourceGroup'
 
 param location string = resourceGroup().location
 param envName string = 'dev'
-param appName string = 'riyadh-mobility'
 param containerImage string = 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
 param enableEventHubs bool = false
 
@@ -74,9 +73,13 @@ module optionalEventHubs './modules/optional-eventhubs.bicep' = if (enableEventH
   }
 }
 
+resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' existing = {
+  name: storageName
+}
+
 resource blobReaderRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(storage.outputs.storageAccountId, containerApp.outputs.principalId, 'blob-reader')
-  scope: resourceId('Microsoft.Storage/storageAccounts', storageName)
+  name: guid(storageName, containerAppName, 'blob-reader')
+  scope: storageAccount
   properties: {
     principalId: containerApp.outputs.principalId
     roleDefinitionId: subscriptionResourceId(
