@@ -1,0 +1,12 @@
+name: riyadh-mobility-intelligence-dashboard
+metadata:
+  template: riyadh-mobility-intelligence-dashboard@0.1.0
+services:
+  web:
+    project: .
+    host: containerapp
+    language: python
+    docker:
+      path: ./Dockerfile
+infra:
+  path: infra
