@@ -1,5 +1,13 @@
 # Agent Build Notes
 
+## Phase 0 scope restatement
+
+- Repo target: `riyadh-mobility-intelligence-dashboard`
+- Required Azure services: Container Apps, Azure Maps, Blob Storage, Cosmos DB, Log Analytics, Application Insights, `azd`, and Bicep
+- Local/sample fallback: required, with bundled sample GeoJSON and JSON
+- No Kubernetes: kept out of scope
+- No production ML: kept out of scope
+
 ## Sources reviewed
 
 - Azure Maps Code Samples: GeoJSON layers, popups, and control patterns
