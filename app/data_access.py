@@ -70,6 +70,10 @@ def _summarize_geojson(geojson: dict, mode: str) -> list[dict]:
     features = geojson.get("features", [])
     summaries = []
     seen = set()
+    geometry_path_map = {
+        "metro": "processed-data/metro_lines.geojson",
+        "bus": "processed-data/bus_routes.geojson",
+    }
     for feature in features:
         props = feature.get("properties", {})
         route_id = props.get("routeId") or props.get("id") or props.get("name")
@@ -85,7 +89,7 @@ def _summarize_geojson(geojson: dict, mode: str) -> list[dict]:
                 "mode": mode,
                 "lineColor": props.get("lineColor", "#888888"),
                 "featureCount": 1,
-                "geometryBlobPath": f"processed-data/{mode}_lines.geojson",
+                "geometryBlobPath": geometry_path_map[mode],
                 "lastUpdatedUtc": props.get("lastUpdatedUtc", "2026-05-24T00:00:00Z"),
             }
         )
@@ -188,7 +192,7 @@ def load_districts() -> tuple[list[dict], str]:
         score_data = compute_accessibility_score(metro_count, bus_count, delay_penalty)
         districts.append(
             {
-                "id": props["districtId"],
+                "id": f"district-{props['districtId']}",
                 "districtId": props["districtId"],
                 "name": props["name"],
                 "center": {"lat": lat, "lon": lon},

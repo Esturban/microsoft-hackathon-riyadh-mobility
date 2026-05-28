@@ -20,7 +20,7 @@ def load_json(path: Path):
 def get_database():
     endpoint = os.environ["COSMOS_ENDPOINT"]
     key = os.environ["COSMOS_KEY"]
-    database_name = os.getenv("COSMOS_DATABASE_NAME", "mobilitydb")
+    database_name = os.getenv("COSMOS_DATABASE", os.getenv("COSMOS_DATABASE_NAME", "mobilitydb"))
     client = CosmosClient(endpoint, credential=key)
     return client.create_database_if_not_exists(id=database_name)
 

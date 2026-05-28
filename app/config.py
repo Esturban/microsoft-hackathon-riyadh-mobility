@@ -1,7 +1,7 @@
 from functools import lru_cache
 from pathlib import Path
 
-from pydantic import Field
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -30,7 +30,10 @@ class Settings(BaseSettings):
 
     cosmos_endpoint: str | None = None
     cosmos_key: str | None = None
-    cosmos_database_name: str = "mobilitydb"
+    cosmos_database_name: str = Field(
+        default="mobilitydb",
+        validation_alias=AliasChoices("COSMOS_DATABASE", "COSMOS_DATABASE_NAME"),
+    )
     cosmos_routes_container: str = "routes"
     cosmos_districts_container: str = "districts"
     cosmos_events_container: str = "events"

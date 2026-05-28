@@ -11,13 +11,21 @@
 ## Sources reviewed
 
 - Azure Maps Code Samples: GeoJSON layers, popups, and control patterns
+  - https://github.com/Azure-Samples/AzureMapsCodeSamples
 - Azure Container Apps overview: single-container hosting model
+  - https://learn.microsoft.com/en-us/azure/container-apps/overview
 - Azure Blob Storage overview: raw and processed file storage path
+  - https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blobs-introduction
 - Azure Cosmos DB overview: summary-document storage model
+  - https://learn.microsoft.com/en-us/azure/cosmos-db/overview
 - Azure Event Hubs overview: stretch-path event ingestion
+  - https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-about
 - Azure Stream Analytics overview: optional event aggregation
+  - https://learn.microsoft.com/en-us/azure/stream-analytics/stream-analytics-introduction
 - Azure Developer CLI overview: `azd up` deployment flow
+  - https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/overview
 - Azure Bicep overview: infra-as-code structure
+  - https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/overview
 
 ## Patterns reused
 
