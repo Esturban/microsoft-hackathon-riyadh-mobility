@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 
 from azure.cosmos import CosmosClient
+from app.scoring import compute_accessibility_score, compute_delay_penalty, haversine_km
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -34,15 +35,21 @@ def upsert_documents(container_name: str, partition_key: str, documents: list[di
 
 def build_route_docs() -> list[dict]:
     docs = []
+    sample_file_map = {
+        "metro": SAMPLE_DIR / "riyadh_metro_lines_sample.geojson",
+        "bus": SAMPLE_DIR / "riyadh_bus_routes_sample.geojson",
+    }
     for mode, file_name in (("metro", "metro_lines.geojson"), ("bus", "bus_routes.geojson")):
-        payload = load_json(PROCESSED_DIR / file_name if (PROCESSED_DIR / file_name).exists() else SAMPLE_DIR / f"riyadh_{mode}_lines_sample.geojson")
+        processed_path = PROCESSED_DIR / file_name
+        payload = load_json(processed_path if processed_path.exists() else sample_file_map[mode])
+        source = "rcrc" if processed_path.exists() else "sample"
         for feature in payload.get("features", []):
             props = feature.get("properties", {})
             docs.append(
                 {
                     "id": props.get("routeId", props.get("id")),
                     "type": mode,
-                    "source": "rcrc",
+                    "source": source,
                     "name": props.get("name"),
                     "mode": mode,
                     "lineColor": props.get("lineColor", "#888888"),
@@ -54,22 +61,54 @@ def build_route_docs() -> list[dict]:
     return docs
 
 
+def iter_feature_points(feature: dict):
+    geometry = feature.get("geometry", {})
+    coordinates = geometry.get("coordinates", [])
+    geometry_type = geometry.get("type")
+    if geometry_type == "Point":
+        yield tuple(coordinates)
+    elif geometry_type == "LineString":
+        for point in coordinates:
+            yield tuple(point)
+    elif geometry_type == "MultiLineString":
+        for line in coordinates:
+            for point in line:
+                yield tuple(point)
+
+
+def count_nearby_features(geojson: dict, lat: float, lon: float, buffer_km: float) -> int:
+    count = 0
+    for feature in geojson.get("features", []):
+        for point_lon, point_lat in iter_feature_points(feature):
+            if haversine_km(lat, lon, point_lat, point_lon) <= buffer_km:
+                count += 1
+                break
+    return count
+
+
 def build_district_docs() -> list[dict]:
+    metro = load_json(SAMPLE_DIR / "riyadh_metro_lines_sample.geojson")
+    bus = load_json(SAMPLE_DIR / "riyadh_bus_routes_sample.geojson")
+    events = load_json(SAMPLE_DIR / "mock_live_events_sample.json")
     payload = load_json(SAMPLE_DIR / "district_centers_sample.geojson")
     docs = []
     for feature in payload.get("features", []):
         props = feature["properties"]
         lon, lat = feature["geometry"]["coordinates"]
+        metro_count = count_nearby_features(metro, lat, lon, 1.5)
+        bus_count = count_nearby_features(bus, lat, lon, 1.5)
+        live_delay_penalty = compute_delay_penalty(lat, lon, events, 1.5)
+        score = compute_accessibility_score(metro_count, bus_count, live_delay_penalty)
         docs.append(
             {
-                "id": props["districtId"],
+                "id": f"district-{props['districtId']}",
                 "districtId": props["districtId"],
                 "name": props["name"],
                 "center": {"lat": lat, "lon": lon},
-                "nearbyMetroCount": 0,
-                "nearbyBusCount": 0,
-                "accessibilityScore": 0,
-                "accessibilityRating": "Low",
+                "nearbyMetroCount": metro_count,
+                "nearbyBusCount": bus_count,
+                "accessibilityScore": score["score"],
+                "accessibilityRating": score["rating"],
                 "lastCalculatedUtc": "2026-05-24T00:00:00Z",
             }
         )

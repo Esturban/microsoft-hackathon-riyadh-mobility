@@ -26,10 +26,10 @@ def config():
     return {
         "appName": settings.app_name,
         "azureMapsEnabled": bool(settings.azure_maps_key),
-        "azureMapsKey": settings.azure_maps_key,
         "azureMapsClientId": settings.azure_maps_client_id,
         "riyadhCenter": {"lat": 24.7136, "lon": 46.6753},
         "accessBufferKm": settings.access_buffer_km,
+        "dataMode": settings.data_mode,
     }
 
 

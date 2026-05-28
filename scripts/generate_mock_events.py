@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import json
+import os
 import random
 from datetime import datetime, timezone
 from pathlib import Path
-
+ 
+from azure.eventhub import EventData, EventHubProducerClient
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 OUTPUT_FILE = BASE_DIR / "app" / "static" / "sample-data" / "mock_live_events_sample.json"
@@ -34,7 +36,27 @@ def make_event(index: int) -> dict:
     }
 
 
+def send_to_event_hub(events: list[dict]) -> None:
+    connection_string = os.getenv("EVENT_HUB_CONNECTION_STRING")
+    event_hub_name = os.getenv("EVENT_HUB_NAME", "mobility-events")
+    if not connection_string:
+        print("event hubs not configured; local-only mode")
+        return
+
+    producer = EventHubProducerClient.from_connection_string(
+        conn_str=connection_string,
+        eventhub_name=event_hub_name,
+    )
+    with producer:
+        batch = producer.create_batch()
+        for event in events:
+            batch.add(EventData(json.dumps(event)))
+        producer.send_batch(batch)
+    print(f"published {len(events)} events to Event Hubs: {event_hub_name}")
+
+
 if __name__ == "__main__":
     events = [make_event(index) for index in range(1, 6)]
     OUTPUT_FILE.write_text(json.dumps(events, indent=2), encoding="utf-8")
     print(f"generated {OUTPUT_FILE}")
+    send_to_event_hub(events)

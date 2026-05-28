@@ -4,6 +4,10 @@ import { createMap, focusDistrict, renderSources, setLayerVisibility } from "./m
 import { renderDebug, renderKpis, renderScore } from "./scoringPanel.js";
 
 async function boot() {
+  window.__AZURE_MAPS_KEY__ = document
+    .querySelector('meta[name="azure-maps-key"]')
+    ?.getAttribute("content");
+
   const [config, routes, metro, bus, districts, events, dataStatus] = await Promise.all([
     api.getConfig(),
     api.getRoutes(),
@@ -22,7 +26,7 @@ async function boot() {
 
   document.getElementById("maps-status-badge").textContent = config.azureMapsEnabled
     ? "Azure Maps live"
-    : "Fallback map mode";
+    : `Fallback map mode (${config.dataMode})`;
 
   if (districts.items.length > 0) {
     await selectDistrict(map, config.accessBufferKm, districts.items[0]);

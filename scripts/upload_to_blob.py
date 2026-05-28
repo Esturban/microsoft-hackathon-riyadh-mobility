@@ -35,5 +35,8 @@ def upload_dir(directory: Path, container_name: str) -> None:
 
 
 if __name__ == "__main__":
-    upload_dir(RAW_DIR, "raw-data")
-    upload_dir(PROCESSED_DIR, "processed-data")
+    upload_dir(RAW_DIR, os.getenv("AZURE_STORAGE_CONTAINER_RAW", "raw-data"))
+    upload_dir(
+        PROCESSED_DIR,
+        os.getenv("AZURE_STORAGE_CONTAINER_PROCESSED", "processed-data"),
+    )

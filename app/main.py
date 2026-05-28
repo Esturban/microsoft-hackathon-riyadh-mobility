@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import logging
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 from .config import STATIC_DIR, get_settings
@@ -21,4 +22,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(router)
-app.mount("/", StaticFiles(directory=STATIC_DIR, html=True), name="static")
+app.mount("/src", StaticFiles(directory=STATIC_DIR / "src"), name="src")
+app.mount("/sample-data", StaticFiles(directory=STATIC_DIR / "sample-data"), name="sample-data")
+
+
+@app.get("/", response_class=HTMLResponse)
+def index():
+    html = (STATIC_DIR / "index.html").read_text(encoding="utf-8")
+    meta = f'<meta name="azure-maps-key" content="{settings.azure_maps_key or ""}" />'
+    return html.replace("</head>", f"    {meta}\n  </head>")
+
+
+@app.get("/{file_path:path}")
+def static_file(file_path: str):
+    target = STATIC_DIR / file_path
+    if target.is_file():
+        if target.suffix == ".html":
+            return FileResponse(target, media_type="text/html")
+        return FileResponse(target)
+    raise HTTPException(status_code=404, detail="Not found")

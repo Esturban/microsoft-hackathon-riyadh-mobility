@@ -14,6 +14,7 @@ DATA_DIR = BASE_DIR / "data"
 class Settings(BaseSettings):
     app_name: str = "Riyadh Mobility Intelligence Dashboard"
     app_env: str = "local"
+    data_mode: str = "sample"
     host: str = "0.0.0.0"
     port: int = 8000
     debug: bool = False
@@ -21,8 +22,10 @@ class Settings(BaseSettings):
     azure_maps_key: str | None = None
     azure_maps_client_id: str | None = None
 
+    azure_storage_account_name: str | None = None
     azure_storage_connection_string: str | None = None
     azure_storage_account_url: str | None = None
+    azure_storage_container_raw: str = "raw-data"
     azure_storage_container_processed: str = "processed-data"
 
     cosmos_endpoint: str | None = None
@@ -31,6 +34,13 @@ class Settings(BaseSettings):
     cosmos_routes_container: str = "routes"
     cosmos_districts_container: str = "districts"
     cosmos_events_container: str = "events"
+
+    event_hub_connection_string: str | None = None
+    event_hub_name: str = "mobility-events"
+
+    azure_openai_endpoint: str | None = None
+    azure_openai_api_key: str | None = None
+    azure_openai_deployment: str | None = None
 
     blob_geojson_prefix: str = ""
     metro_blob_name: str = "metro_lines.geojson"
@@ -58,6 +68,7 @@ class Settings(BaseSettings):
         env_file=".env",
         env_file_encoding="utf-8",
         extra="ignore",
+        populate_by_name=True,
     )
 
 

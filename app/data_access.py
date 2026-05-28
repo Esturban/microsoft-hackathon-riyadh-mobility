@@ -12,6 +12,10 @@ from .scoring import compute_accessibility_score, compute_delay_penalty
 logger = logging.getLogger(__name__)
 
 
+def _prefers_mode(*allowed: str) -> bool:
+    return get_settings().data_mode.lower() in allowed
+
+
 def _read_json_file(path: Path):
     with path.open("r", encoding="utf-8") as handle:
         return json.load(handle)
@@ -94,17 +98,19 @@ def load_route_geojson(mode: str) -> tuple[dict, str]:
         "metro": settings.metro_blob_name,
         "bus": settings.bus_blob_name,
     }
-    blob_payload = _load_blob_json(blob_map[mode])
-    if blob_payload:
-        return blob_payload, "blob"
+    if _prefers_mode("blob", "auto", "cosmos"):
+        blob_payload = _load_blob_json(blob_map[mode])
+        if blob_payload:
+            return blob_payload, "blob"
     return _load_sample_geojson(mode)
 
 
 def load_route_summaries() -> tuple[list[dict], str]:
     settings = get_settings()
-    cosmos_items = _query_cosmos_items(settings.cosmos_routes_container)
-    if cosmos_items:
-        return cosmos_items, "cosmos"
+    if _prefers_mode("cosmos", "auto"):
+        cosmos_items = _query_cosmos_items(settings.cosmos_routes_container)
+        if cosmos_items:
+            return cosmos_items, "cosmos"
 
     metro_geojson, metro_source = load_route_geojson("metro")
     bus_geojson, bus_source = load_route_geojson("bus")
@@ -146,11 +152,16 @@ def _iter_feature_points(feature: dict) -> Iterable[tuple[float, float]]:
 
 def load_districts() -> tuple[list[dict], str]:
     settings = get_settings()
-    cosmos_items = _query_cosmos_items(settings.cosmos_districts_container)
-    if cosmos_items:
-        return cosmos_items, "cosmos"
+    if _prefers_mode("cosmos", "auto"):
+        cosmos_items = _query_cosmos_items(settings.cosmos_districts_container)
+        if cosmos_items:
+            return cosmos_items, "cosmos"
 
-    blob_payload = _load_blob_json(settings.district_blob_name)
+    blob_payload = (
+        _load_blob_json(settings.district_blob_name)
+        if _prefers_mode("blob", "auto", "cosmos")
+        else None
+    )
     geojson, source = (blob_payload, "blob") if blob_payload else _load_sample_geojson(
         "districts"
     )
@@ -193,13 +204,15 @@ def load_districts() -> tuple[list[dict], str]:
 
 def load_live_events() -> tuple[list[dict], str]:
     settings = get_settings()
-    cosmos_items = _query_cosmos_items(settings.cosmos_events_container)
-    if cosmos_items:
-        return cosmos_items, "cosmos"
+    if _prefers_mode("cosmos", "auto"):
+        cosmos_items = _query_cosmos_items(settings.cosmos_events_container)
+        if cosmos_items:
+            return cosmos_items, "cosmos"
 
-    blob_payload = _load_blob_json(settings.live_events_blob_name)
-    if blob_payload:
-        return blob_payload, "blob"
+    if _prefers_mode("blob", "auto", "cosmos"):
+        blob_payload = _load_blob_json(settings.live_events_blob_name)
+        if blob_payload:
+            return blob_payload, "blob"
     return _load_sample_events()
 
 
@@ -238,13 +251,16 @@ def get_district_score(district_id: str) -> tuple[dict | None, str]:
 def get_data_status() -> dict:
     route_items, route_source = load_route_summaries()
     _, district_source = load_districts()
-    _, events_source = load_live_events()
+    events, events_source = load_live_events()
+    settings = get_settings()
     return {
+        "requestedMode": settings.data_mode,
         "routes": {"count": len(route_items), "source": route_source},
         "districts": {"source": district_source},
         "liveEvents": {
-            "enabled": get_settings().enable_live_events,
+            "enabled": settings.enable_live_events,
             "source": events_source,
+            "count": len(events),
         },
         "activeMode": (
             "cosmos"
@@ -252,5 +268,9 @@ def get_data_status() -> dict:
             else "blob"
             if "blob" in {route_source, district_source, events_source}
             else "sample"
+        ),
+        "fallbackMessage": (
+            "Azure services are optional. The app falls back to bundled sample files "
+            "when Blob Storage or Cosmos DB is unavailable."
         ),
     }

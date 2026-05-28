@@ -7,6 +7,12 @@ def test_accessibility_score_formula():
     assert result["rating"] == "High"
 
 
+def test_accessibility_score_low_medium_high_bands():
+    assert compute_accessibility_score(0, 2, 0)["rating"] == "Low"
+    assert compute_accessibility_score(1, 1, 0)["rating"] == "Medium"
+    assert compute_accessibility_score(2, 1, 0)["rating"] == "High"
+
+
 def test_delay_penalty_only_counts_medium_and_high_nearby():
     events = [
         {"severity": "medium", "lat": 24.7136, "lon": 46.6753},

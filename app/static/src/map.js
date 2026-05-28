@@ -23,7 +23,7 @@ export function createMap(config, domIds) {
     style: "road",
     authOptions: {
       authType: "subscriptionKey",
-      subscriptionKey: config.azureMapsKey,
+      subscriptionKey: window.__AZURE_MAPS_KEY__,
     },
   });
 
@@ -58,7 +58,7 @@ function createFallbackMap(mapId) {
   root.innerHTML = `
     <div class="fallback-inner">
       <h3>Map placeholder</h3>
-      <p>Provide an Azure Maps key to render live tiles.</p>
+      <p>Provide Azure Maps browser credentials to render live tiles.</p>
       <p>The district selector, score API, and debug panel remain fully functional.</p>
     </div>
   `;
