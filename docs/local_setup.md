@@ -6,4 +6,4 @@
 4. `python -m uvicorn app.main:app --reload`
 5. Open `http://localhost:8000`
 
-Without `AZURE_MAPS_KEY`, the app uses a local map placeholder and still exposes the full API and scoring flow.
+Without `AZURE_MAPS_KEY`, the app uses an OpenStreetMap fallback and still exposes the full API and scoring flow.

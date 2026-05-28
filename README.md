@@ -57,7 +57,7 @@ After deployment, copy the `WEB_APP_URL` from `azd` output and open it in your b
 
 ## Troubleshooting
 
-- If the browser map does not render, the app still works in sample mode with a local placeholder
+- If no Azure Maps key is set, the app falls back to an OpenStreetMap view for local exploration
 - Check `/api/data-status` to confirm whether you are in `sample`, `blob`, or `cosmos` mode
 - Run `python3 scripts/validate_data.py` if edited sample files stop loading
 - Container health checks should target `/health`

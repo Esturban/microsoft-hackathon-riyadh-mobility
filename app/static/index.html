@@ -8,6 +8,12 @@
       rel="stylesheet"
       href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/3/atlas.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
     <link rel="stylesheet" href="/src/styles.css" />
   </head>
   <body>
@@ -36,7 +42,7 @@
           </div>
           <div id="map"></div>
           <p id="map-fallback" class="map-fallback hidden">
-            Azure Maps browser credentials are not configured. The app is showing a simplified local canvas while the API and scoring still work.
+            Azure Maps browser credentials are not configured. The app is using an OpenStreetMap fallback so you can still explore layers locally.
           </p>
         </section>
 
@@ -77,6 +83,11 @@
     </div>
 
     <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/3/atlas.min.js"></script>
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

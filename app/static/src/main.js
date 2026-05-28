@@ -26,7 +26,7 @@ async function boot() {
 
   document.getElementById("maps-status-badge").textContent = config.azureMapsEnabled
     ? "Azure Maps live"
-    : `Fallback map mode (${config.dataMode})`;
+    : `OpenStreetMap fallback (${config.dataMode})`;
 
   if (districts.items.length > 0) {
     await selectDistrict(map, config.accessBufferKm, districts.items[0]);

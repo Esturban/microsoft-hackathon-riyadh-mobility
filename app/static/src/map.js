@@ -14,7 +14,7 @@ export function createMap(config, domIds) {
   const hasAtlas = typeof atlas !== "undefined" && config.azureMapsEnabled;
   if (!hasAtlas) {
     document.getElementById(domIds.fallbackId).classList.remove("hidden");
-    return createFallbackMap(domIds.mapId);
+    return createLeafletMap(config, domIds.mapId);
   }
 
   const map = new atlas.Map(domIds.mapId, {
@@ -32,7 +32,7 @@ export function createMap(config, domIds) {
     installPopup(map);
   });
 
-  return map;
+  return { engine: "atlas", instance: map };
 }
 
 function installPopup(map) {
@@ -52,17 +52,22 @@ function installPopup(map) {
   });
 }
 
-function createFallbackMap(mapId) {
-  const root = document.getElementById(mapId);
-  root.classList.add("fallback-map");
-  root.innerHTML = `
-    <div class="fallback-inner">
-      <h3>Map placeholder</h3>
-      <p>Provide Azure Maps browser credentials to render live tiles.</p>
-      <p>The district selector, score API, and debug panel remain fully functional.</p>
-    </div>
-  `;
-  return null;
+function createLeafletMap(config, mapId) {
+  const map = L.map(mapId, {
+    zoomControl: true,
+    attributionControl: true,
+  }).setView([config.riyadhCenter.lat, config.riyadhCenter.lon], 10);
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: "&copy; OpenStreetMap contributors",
+  }).addTo(map);
+
+  return {
+    engine: "leaflet",
+    instance: map,
+    layers: {},
+  };
 }
 
 export function renderSources(map, data) {
@@ -70,12 +75,19 @@ export function renderSources(map, data) {
     return;
   }
 
+  if (map.engine === "leaflet") {
+    renderLeafletSources(map, data);
+    return;
+  }
+
+  const atlasMap = map.instance;
+
   const addOrReplaceSource = (sourceId, payload) => {
-    if (map.sources.getById(sourceId)) {
-      map.sources.remove(sourceId);
+    if (atlasMap.sources.getById(sourceId)) {
+      atlasMap.sources.remove(sourceId);
     }
     const source = new atlas.source.DataSource(sourceId);
-    map.sources.add(source);
+    atlasMap.sources.add(source);
     source.add(payload);
     return source;
   };
@@ -112,21 +124,21 @@ export function renderSources(map, data) {
     { type: "FeatureCollection", features: [] }
   );
 
-  if (!map.layers.getLayerById(LAYER_IDS.metroLayer)) {
-    map.layers.add(
+  if (!atlasMap.layers.getLayerById(LAYER_IDS.metroLayer)) {
+    atlasMap.layers.add(
       new atlas.layer.LineLayer(LAYER_IDS.metroSource, LAYER_IDS.metroLayer, {
         strokeColor: ["coalesce", ["get", "lineColor"], "#1f77b4"],
         strokeWidth: 6,
       })
     );
-    map.layers.add(
+    atlasMap.layers.add(
       new atlas.layer.LineLayer(LAYER_IDS.busSource, LAYER_IDS.busLayer, {
         strokeColor: "#f97316",
         strokeWidth: 3,
         strokeDashArray: [2, 1],
       })
     );
-    map.layers.add(
+    atlasMap.layers.add(
       new atlas.layer.BubbleLayer(LAYER_IDS.districtSource, LAYER_IDS.districtLayer, {
         radius: 6,
         color: "#111827",
@@ -134,7 +146,7 @@ export function renderSources(map, data) {
         strokeColor: "#f8fafc",
       })
     );
-    map.layers.add(
+    atlasMap.layers.add(
       new atlas.layer.BubbleLayer(LAYER_IDS.eventsSource, LAYER_IDS.eventsLayer, {
         radius: 8,
         color: "#dc2626",
@@ -142,7 +154,7 @@ export function renderSources(map, data) {
         strokeWidth: 2,
       })
     );
-    map.layers.add(
+    atlasMap.layers.add(
       new atlas.layer.PolygonLayer(LAYER_IDS.bufferSource, LAYER_IDS.bufferLayer, {
         fillColor: "rgba(37, 99, 235, 0.15)",
         strokeColor: "#2563eb",
@@ -153,21 +165,159 @@ export function renderSources(map, data) {
 }
 
 export function setLayerVisibility(map, layerId, visible) {
-  if (!map || !map.layers.getLayerById(layerId)) {
+  if (!map) {
     return;
   }
-  map.layers.getLayerById(layerId).setOptions({ visible });
+
+  if (map.engine === "leaflet") {
+    const layer = map.layers?.[layerId];
+    if (!layer) {
+      return;
+    }
+    if (visible) {
+      layer.addTo(map.instance);
+    } else {
+      layer.remove();
+    }
+    return;
+  }
+
+  const atlasMap = map.instance;
+  if (!atlasMap.layers.getLayerById(layerId)) {
+    return;
+  }
+  atlasMap.layers.getLayerById(layerId).setOptions({ visible });
 }
 
 export function focusDistrict(map, district, radiusKm) {
   if (!map || !district) {
     return;
   }
-  const source = map.sources.getById(LAYER_IDS.bufferSource);
+
+  if (map.engine === "leaflet") {
+    const leafletMap = map.instance;
+    const layer = map.layers[LAYER_IDS.bufferLayer];
+    if (layer) {
+      layer.clearLayers();
+      layer.addData(makeCirclePolygon(district.center, radiusKm));
+    }
+    leafletMap.setView([district.center.lat, district.center.lon], 12);
+    return;
+  }
+
+  const atlasMap = map.instance;
+  const source = atlasMap.sources.getById(LAYER_IDS.bufferSource);
   source.clear();
   source.add(makeCirclePolygon(district.center, radiusKm));
-  map.setCamera({
+  atlasMap.setCamera({
     center: [district.center.lon, district.center.lat],
     zoom: 12,
   });
+}
+
+function renderLeafletSources(map, data) {
+  const leafletMap = map.instance;
+  const districtGeojson = {
+    type: "FeatureCollection",
+    features: data.districts.items.map((item) => ({
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [item.center.lon, item.center.lat],
+      },
+      properties: { name: item.name, districtId: item.districtId },
+    })),
+  };
+  const eventsGeojson = {
+    type: "FeatureCollection",
+    features: data.events.items.map((item) => ({
+      type: "Feature",
+      geometry: { type: "Point", coordinates: [item.lon, item.lat] },
+      properties: item,
+    })),
+  };
+
+  const replaceLayer = (layerId, layer) => {
+    if (map.layers[layerId]) {
+      map.layers[layerId].remove();
+    }
+    map.layers[layerId] = layer;
+    layer.addTo(leafletMap);
+  };
+
+  replaceLayer(
+    LAYER_IDS.metroLayer,
+    L.geoJSON(data.metro.geojson, {
+      style: (feature) => ({
+        color: feature.properties.lineColor || "#1f77b4",
+        weight: 6,
+      }),
+      onEachFeature: (feature, layer) => {
+        layer.bindPopup(popupHtml(feature.properties));
+      },
+    })
+  );
+
+  replaceLayer(
+    LAYER_IDS.busLayer,
+    L.geoJSON(data.bus.geojson, {
+      style: () => ({
+        color: "#f97316",
+        weight: 3,
+        dashArray: "8 4",
+      }),
+      onEachFeature: (feature, layer) => {
+        layer.bindPopup(popupHtml(feature.properties));
+      },
+    })
+  );
+
+  replaceLayer(
+    LAYER_IDS.districtLayer,
+    L.geoJSON(districtGeojson, {
+      pointToLayer: (_, latlng) =>
+        L.circleMarker(latlng, {
+          radius: 6,
+          color: "#f8fafc",
+          weight: 2,
+          fillColor: "#111827",
+          fillOpacity: 1,
+        }),
+      onEachFeature: (feature, layer) => {
+        layer.bindPopup(popupHtml(feature.properties));
+      },
+    })
+  );
+
+  replaceLayer(
+    LAYER_IDS.eventsLayer,
+    L.geoJSON(eventsGeojson, {
+      pointToLayer: (_, latlng) =>
+        L.circleMarker(latlng, {
+          radius: 8,
+          color: "#fff7ed",
+          weight: 2,
+          fillColor: "#dc2626",
+          fillOpacity: 1,
+        }),
+      onEachFeature: (feature, layer) => {
+        layer.bindPopup(popupHtml(feature.properties));
+      },
+    })
+  );
+
+  replaceLayer(
+    LAYER_IDS.bufferLayer,
+    L.geoJSON(
+      { type: "FeatureCollection", features: [] },
+      {
+        style: () => ({
+          color: "#2563eb",
+          weight: 2,
+          fillColor: "#2563eb",
+          fillOpacity: 0.15,
+        }),
+      }
+    )
+  );
 }
