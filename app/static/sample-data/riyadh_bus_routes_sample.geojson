@@ -1,0 +1,62 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "bus-route-12",
+        "routeId": "bus-route-12",
+        "name": "Bus Route 12",
+        "lineColor": "#f97316",
+        "source": "sample"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [46.6510, 24.7580],
+          [46.6660, 24.7380],
+          [46.6753, 24.7136],
+          [46.6880, 24.7010]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "bus-route-22",
+        "routeId": "bus-route-22",
+        "name": "Bus Route 22",
+        "lineColor": "#fb923c",
+        "source": "sample"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [46.7000, 24.7400],
+          [46.6910, 24.7260],
+          [46.6810, 24.7150],
+          [46.6690, 24.7050]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "bus-route-31",
+        "routeId": "bus-route-31",
+        "name": "Bus Route 31",
+        "lineColor": "#fdba74",
+        "source": "sample"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [46.6080, 24.7330],
+          [46.6300, 24.7250],
+          [46.6480, 24.7160],
+          [46.6753, 24.7136]
+        ]
+      }
+    }
+  ]
+}

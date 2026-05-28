@@ -1,0 +1,26 @@
+[
+  {
+    "id": "event-20260524-0001",
+    "routeId": "bus-route-12",
+    "districtId": "central-riyadh",
+    "eventType": "delay",
+    "severity": "medium",
+    "delayMinutes": 8,
+    "lat": 24.7136,
+    "lon": 46.6753,
+    "timestampUtc": "2026-05-24T12:00:00Z",
+    "source": "simulator"
+  },
+  {
+    "id": "event-20260524-0002",
+    "routeId": "metro-red-line",
+    "districtId": "olaya",
+    "eventType": "congestion",
+    "severity": "high",
+    "delayMinutes": 14,
+    "lat": 24.7010,
+    "lon": 46.6760,
+    "timestampUtc": "2026-05-24T12:05:00Z",
+    "source": "simulator"
+  }
+]

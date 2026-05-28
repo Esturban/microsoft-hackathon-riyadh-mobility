@@ -1,0 +1,38 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "districtId": "central-riyadh",
+        "name": "Central Riyadh"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [46.6753, 24.7136]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "districtId": "olaya",
+        "name": "Olaya"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [46.6750, 24.6950]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "districtId": "malaz",
+        "name": "Al Malaz"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [46.7230, 24.6660]
+      }
+    }
+  ]
+}

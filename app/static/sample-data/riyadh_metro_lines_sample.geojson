@@ -1,0 +1,43 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "metro-blue-line",
+        "routeId": "metro-blue-line",
+        "name": "Blue Line",
+        "lineColor": "#2563eb",
+        "source": "sample"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [46.6201, 24.7420],
+          [46.6480, 24.7290],
+          [46.6753, 24.7136],
+          [46.7088, 24.6952]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "metro-red-line",
+        "routeId": "metro-red-line",
+        "name": "Red Line",
+        "lineColor": "#dc2626",
+        "source": "sample"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [46.6400, 24.7800],
+          [46.6580, 24.7520],
+          [46.6753, 24.7136],
+          [46.6880, 24.6800]
+        ]
+      }
+    }
+  ]
+}
