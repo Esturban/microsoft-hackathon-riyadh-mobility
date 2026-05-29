@@ -13,7 +13,9 @@ var mapsName = 'maps-riyadh-mobility-${envSlug}'
 var logName = 'log-riyadh-mobility-${envSlug}'
 var appInsightsName = 'appi-riyadh-mobility-${envSlug}'
 var containerEnvName = 'cae-riyadh-mobility-${envSlug}'
-var containerAppName = 'ca-riyadh-mobility-api-${envSlug}'
+var shortEnvSlug = take(envSlug, 12)
+var shortSuffix = take(suffix, 6)
+var containerAppName = 'ca-rmd-api-${shortEnvSlug}-${shortSuffix}'
 
 module monitoring './modules/monitoring.bicep' = {
   name: 'monitoring'
