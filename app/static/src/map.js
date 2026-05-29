@@ -27,12 +27,15 @@ export function createMap(config, domIds) {
     },
   });
 
-  map.events.add("ready", () => {
-    fitRiyadhView(map, config.riyadhCenter);
-    installPopup(map);
+  const ready = new Promise((resolve) => {
+    map.events.add("ready", () => {
+      fitRiyadhView(map, config.riyadhCenter);
+      installPopup(map);
+      resolve();
+    });
   });
 
-  return { engine: "atlas", instance: map };
+  return { engine: "atlas", instance: map, ready };
 }
 
 function installPopup(map) {
@@ -67,13 +70,23 @@ function createLeafletMap(config, mapId) {
     engine: "leaflet",
     instance: map,
     layers: {},
+    ready: Promise.resolve(),
   };
 }
 
-export function renderSources(map, data) {
+async function waitForMapReady(map) {
   if (!map) {
     return;
   }
+  await (map.ready ?? Promise.resolve());
+}
+
+export async function renderSources(map, data) {
+  if (!map) {
+    return;
+  }
+
+  await waitForMapReady(map);
 
   if (map.engine === "leaflet") {
     renderLeafletSources(map, data);
@@ -164,10 +177,12 @@ export function renderSources(map, data) {
   }
 }
 
-export function setLayerVisibility(map, layerId, visible) {
+export async function setLayerVisibility(map, layerId, visible) {
   if (!map) {
     return;
   }
+
+  await waitForMapReady(map);
 
   if (map.engine === "leaflet") {
     const layer = map.layers?.[layerId];
@@ -189,10 +204,12 @@ export function setLayerVisibility(map, layerId, visible) {
   atlasMap.layers.getLayerById(layerId).setOptions({ visible });
 }
 
-export function focusDistrict(map, district, radiusKm) {
+export async function focusDistrict(map, district, radiusKm) {
   if (!map || !district) {
     return;
   }
+
+  await waitForMapReady(map);
 
   if (map.engine === "leaflet") {
     const leafletMap = map.instance;

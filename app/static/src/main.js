@@ -19,7 +19,7 @@ async function boot() {
   ]);
 
   const map = createMap(config, { mapId: "map", fallbackId: "map-fallback" });
-  renderSources(map, { metro, bus, districts, events });
+  await renderSources(map, { metro, bus, districts, events });
   renderKpis(routes.items);
   renderDebug(dataStatus);
   bindControls(map, config, districts.items);
@@ -45,13 +45,13 @@ function bindControls(map, config, districts) {
   });
 
   document.getElementById("toggle-metro").addEventListener("change", (event) => {
-    setLayerVisibility(map, LAYER_IDS.metroLayer, event.target.checked);
+    void setLayerVisibility(map, LAYER_IDS.metroLayer, event.target.checked);
   });
   document.getElementById("toggle-bus").addEventListener("change", (event) => {
-    setLayerVisibility(map, LAYER_IDS.busLayer, event.target.checked);
+    void setLayerVisibility(map, LAYER_IDS.busLayer, event.target.checked);
   });
   document.getElementById("toggle-events").addEventListener("change", (event) => {
-    setLayerVisibility(map, LAYER_IDS.eventsLayer, event.target.checked);
+    void setLayerVisibility(map, LAYER_IDS.eventsLayer, event.target.checked);
   });
 }
 
@@ -61,7 +61,7 @@ async function selectDistrict(map, accessBufferKm, district) {
   }
   const score = await api.getScore(district.districtId);
   renderScore(score);
-  focusDistrict(map, district, accessBufferKm);
+  await focusDistrict(map, district, accessBufferKm);
 }
 
 boot().catch((error) => {

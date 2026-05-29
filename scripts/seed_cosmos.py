@@ -27,7 +27,15 @@ def get_database():
 
 def upsert_documents(container_name: str, partition_key: str, documents: list[dict]) -> None:
     db = get_database()
-    container = db.create_container_if_not_exists(id=container_name, partition_key={"paths": [partition_key], "kind": "Hash"})
+    try:
+        db.delete_container(container_name)
+        print(f"reset {container_name}")
+    except Exception:
+        pass
+    container = db.create_container_if_not_exists(
+        id=container_name,
+        partition_key={"paths": [partition_key], "kind": "Hash"},
+    )
     for document in documents:
         container.upsert_item(document)
         print(f"upserted {container_name}/{document['id']}")
@@ -87,8 +95,14 @@ def count_nearby_features(geojson: dict, lat: float, lon: float, buffer_km: floa
 
 
 def build_district_docs() -> list[dict]:
-    metro = load_json(SAMPLE_DIR / "riyadh_metro_lines_sample.geojson")
-    bus = load_json(SAMPLE_DIR / "riyadh_bus_routes_sample.geojson")
+    metro_processed = PROCESSED_DIR / "metro_lines.geojson"
+    bus_processed = PROCESSED_DIR / "bus_routes.geojson"
+    metro = load_json(
+        metro_processed if metro_processed.exists() else SAMPLE_DIR / "riyadh_metro_lines_sample.geojson"
+    )
+    bus = load_json(
+        bus_processed if bus_processed.exists() else SAMPLE_DIR / "riyadh_bus_routes_sample.geojson"
+    )
     events = load_json(SAMPLE_DIR / "mock_live_events_sample.json")
     payload = load_json(SAMPLE_DIR / "district_centers_sample.geojson")
     docs = []

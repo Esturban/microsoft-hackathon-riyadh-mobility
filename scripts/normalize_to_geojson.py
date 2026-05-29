@@ -15,7 +15,42 @@ def detect_geometry(record: dict):
         value = record.get(key)
         if isinstance(value, dict) and value.get("type") and value.get("coordinates"):
             return value
+        if (
+            isinstance(value, dict)
+            and value.get("type") == "Feature"
+            and isinstance(value.get("geometry"), dict)
+            and value["geometry"].get("type")
+            and value["geometry"].get("coordinates")
+        ):
+            return value["geometry"]
     return None
+
+
+def canonical_properties(raw_name: str, record: dict) -> dict:
+    if raw_name == "metro.json":
+        line_code = str(record.get("metroline") or record.get("index") or "metro")
+        line_name = record.get("metrolinename") or line_code
+        return {
+            "id": f"metro-{line_code.lower()}",
+            "routeId": f"metro-{line_code.lower()}",
+            "name": line_name,
+            "lineColor": record.get("m_linecolorcode") or "#2563eb",
+            "source": "rcrc",
+        }
+
+    route_code = str(record.get("busroutecode") or record.get("busroute") or record.get("index") or "bus")
+    origin = record.get("origin")
+    destination = record.get("destination")
+    route_name = f"Bus {route_code}"
+    if origin and destination and origin != "NA" and destination != "NA":
+        route_name = f"Bus {route_code}: {origin} to {destination}"
+    return {
+        "id": f"bus-{route_code.lower()}",
+        "routeId": f"bus-{route_code.lower()}",
+        "name": route_name,
+        "lineColor": "#f97316",
+        "source": "rcrc",
+    }
 
 
 def normalize_file(raw_name: str, output_name: str) -> None:
@@ -31,10 +66,12 @@ def normalize_file(raw_name: str, output_name: str) -> None:
         geometry = detect_geometry(record)
         if not geometry:
             continue
+        properties = {k: v for k, v in record.items() if k not in {"geometry", "geo_shape", "geoshape", "shape"}}
+        properties.update(canonical_properties(raw_name, record))
         features.append(
             {
                 "type": "Feature",
-                "properties": {k: v for k, v in record.items() if k not in {"geometry", "geo_shape", "geoshape", "shape"}},
+                "properties": properties,
                 "geometry": geometry,
             }
         )

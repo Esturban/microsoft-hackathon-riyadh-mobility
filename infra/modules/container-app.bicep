@@ -101,6 +101,10 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = {
               name: 'PORT'
               value: '80'
             }
+            {
+              name: 'DATA_MODE'
+              value: 'auto'
+            }
           ]
           resources: {
             cpu: json('0.5')
