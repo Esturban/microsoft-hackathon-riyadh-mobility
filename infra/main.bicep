@@ -70,11 +70,14 @@ module containerApp './modules/container-app.bicep' = {
     logAnalyticsSharedKey: monitoring.outputs.logAnalyticsSharedKey
     appInsightsConnectionString: monitoring.outputs.appInsightsConnectionString
     containerImage: containerImage
-    registryServer: containerRegistry.outputs.loginServer
+    serviceName: 'web'
     mapsKey: maps.outputs.primaryKey
     storageConnectionString: storage.outputs.connectionString
     cosmosEndpoint: cosmos.outputs.endpoint
     cosmosKey: cosmos.outputs.primaryKey
+    registryServer: containerRegistry.outputs.loginServer
+    registryUsername: containerRegistry.outputs.username
+    registryPassword: containerRegistry.outputs.password
   }
 }
 

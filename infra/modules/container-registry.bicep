@@ -8,9 +8,11 @@ resource registry 'Microsoft.ContainerRegistry/registries@2023-07-01' = {
     name: 'Basic'
   }
   properties: {
-    adminUserEnabled: false
+    adminUserEnabled: true
   }
 }
 
 output id string = registry.id
 output loginServer string = registry.properties.loginServer
+output username string = registry.listCredentials().username
+output password string = registry.listCredentials().passwords[0].value

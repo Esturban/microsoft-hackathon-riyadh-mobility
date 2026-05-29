@@ -5,11 +5,15 @@ param logAnalyticsWorkspaceId string
 param logAnalyticsSharedKey string
 param appInsightsConnectionString string
 param containerImage string
-param registryServer string
+param serviceName string
 param mapsKey string
 param storageConnectionString string
 param cosmosEndpoint string
 param cosmosKey string
+param registryServer string
+param registryUsername string
+@secure()
+param registryPassword string
 
 resource env 'Microsoft.App/managedEnvironments@2024-03-01' = {
   name: containerAppEnvironmentName
@@ -28,22 +32,26 @@ resource env 'Microsoft.App/managedEnvironments@2024-03-01' = {
 resource app 'Microsoft.App/containerApps@2024-03-01' = {
   name: containerAppName
   location: location
+  tags: {
+    'azd-service-name': serviceName
+  }
   identity: {
     type: 'SystemAssigned'
   }
   properties: {
     managedEnvironmentId: env.id
     configuration: {
-      ingress: {
-        external: true
-        targetPort: 8000
-      }
       registries: [
         {
           server: registryServer
-          identity: 'system'
+          username: registryUsername
+          passwordSecretRef: 'registry-password'
         }
       ]
+      ingress: {
+        external: true
+        targetPort: 80
+      }
       secrets: [
         {
           name: 'maps-key'
@@ -56,6 +64,10 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = {
         {
           name: 'cosmos-key'
           value: cosmosKey
+        }
+        {
+          name: 'registry-password'
+          value: registryPassword
         }
       ]
     }
@@ -84,6 +96,10 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = {
             {
               name: 'COSMOS_KEY'
               secretRef: 'cosmos-key'
+            }
+            {
+              name: 'PORT'
+              value: '80'
             }
           ]
           resources: {

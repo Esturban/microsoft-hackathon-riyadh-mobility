@@ -6,6 +6,7 @@ services:
     project: .
     language: py
     host: containerapp
+    resourceName: ca-rmd-api-riyadh-ud-we-zwiurj
 infra:
   provider: bicep
   path: infra
