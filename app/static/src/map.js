@@ -1,9 +1,84 @@
 import { LAYER_IDS, makeCirclePolygon } from "./layers.js";
 
+const INTERNAL_KEYS = new Set([
+  "_rid", "_self", "_etag", "_attachments", "_ts", "_azureMapsShapeId",
+  "geo_point_2d", "comments", "commentsar", "index",
+]);
+
+function formatTimestamp(ts) {
+  if (!ts) return null;
+  try {
+    return new Date(ts).toLocaleString("en-SA", { dateStyle: "medium", timeStyle: "short" });
+  } catch (_) {
+    return ts;
+  }
+}
+
+function severityColor(severity) {
+  if (severity === "high")   return "#dc2626";
+  if (severity === "medium") return "#d97706";
+  return "#2563eb";
+}
+
+function row(label, value) {
+  return `<div class="popup-row"><span>${label}</span><strong>${value}</strong></div>`;
+}
+
+function badge(icon, text, color) {
+  return `<div class="popup-badge" style="background:${color}22;color:${color}">${icon} ${text}</div>`;
+}
+
 function popupHtml(properties) {
-  return Object.entries(properties)
-    .map(([key, value]) => `<div><strong>${key}</strong>: ${value}</div>`)
-    .join("");
+  const p = properties;
+
+  if (p.eventType) {
+    const color = severityColor(p.severity);
+    const ts = formatTimestamp(p.timestampUtc);
+    return `<div class="popup-card">
+      ${badge("&#9888;", `${p.eventType} &middot; ${p.severity || "unknown"}`, color)}
+      <div class="popup-title">${p.routeId || "Unknown route"}</div>
+      <div class="popup-rows">
+        ${p.delayMinutes != null ? row("Delay", `${p.delayMinutes} min`) : ""}
+        ${p.districtId ? row("District", p.districtId) : ""}
+        ${ts ? row("Time", ts) : ""}
+        ${p.source ? row("Source", p.source) : ""}
+      </div>
+    </div>`;
+  }
+
+  if (p.mode === "metro" || p.metroline) {
+    const color = p.lineColor || p.m_linecolorcode || "#888";
+    const terminals = p.metroterminalstations || "";
+    return `<div class="popup-card">
+      ${badge("&#9644;", "Metro line", color)}
+      <div class="popup-title">${p.name || p.metrolinename || "Metro Line"}</div>
+      ${p.metrolinenamear ? `<div class="popup-subtitle">${p.metrolinenamear}</div>` : ""}
+      <div class="popup-rows">
+        ${terminals ? row("Terminals", terminals) : ""}
+        ${p.source ? row("Source", p.source) : ""}
+      </div>
+    </div>`;
+  }
+
+  if (p.mode === "bus" || p.busroutecode) {
+    const origin = p.origin && p.origin !== "NA" ? p.origin : null;
+    const dest   = p.destination && p.destination !== "NA" ? p.destination : null;
+    return `<div class="popup-card">
+      ${badge("&#9656;", "Bus route", "#ea580c")}
+      <div class="popup-title">${p.name || p.busroutecode || "Bus Route"}</div>
+      <div class="popup-rows">
+        ${origin ? row("From", origin) : ""}
+        ${dest   ? row("To",   dest)   : ""}
+        ${p.direction != null ? row("Direction", p.direction) : ""}
+      </div>
+    </div>`;
+  }
+
+  const entries = Object.entries(p)
+    .filter(([k, v]) => !INTERNAL_KEYS.has(k) && v !== null && v !== "" && v !== "NA");
+  return `<div class="popup-card"><div class="popup-rows">
+    ${entries.map(([k, v]) => row(k, v)).join("")}
+  </div></div>`;
 }
 
 function fitRiyadhView(map, center) {
@@ -50,7 +125,7 @@ function installPopup(map) {
         return;
       }
       popup.setOptions({
-        content: `<div class="popup">${popupHtml(shape.getProperties())}</div>`,
+        content: `<div style="padding:12px 14px">${popupHtml(shape.getProperties())}</div>`,
         position: event.position,
       });
       popup.open(map);
