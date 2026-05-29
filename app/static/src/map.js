@@ -30,7 +30,6 @@ export function createMap(config, domIds) {
   const ready = new Promise((resolve) => {
     map.events.add("ready", () => {
       fitRiyadhView(map, config.riyadhCenter);
-      installPopup(map);
       resolve();
     });
   });
@@ -174,6 +173,11 @@ export async function renderSources(map, data) {
         strokeWidth: 2,
       })
     );
+
+    if (!atlasMap.__popupInstalled) {
+      installPopup(atlasMap);
+      atlasMap.__popupInstalled = true;
+    }
   }
 }
 
