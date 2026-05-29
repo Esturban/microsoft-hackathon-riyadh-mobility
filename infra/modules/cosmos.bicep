@@ -24,7 +24,8 @@ resource cosmos 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' = {
 }
 
 resource database 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2024-05-15' = {
-  name: '${cosmos.name}/${databaseName}'
+  name: databaseName
+  parent: cosmos
   properties: {
     resource: {
       id: databaseName
@@ -33,7 +34,11 @@ resource database 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2024-05-15
 }
 
 resource routes 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2024-05-15' = {
-  name: '${cosmos.name}/${databaseName}/routes'
+  name: 'routes'
+  parent: database
+  dependsOn: [
+    database
+  ]
   properties: {
     resource: {
       id: 'routes'
@@ -46,7 +51,11 @@ resource routes 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2
 }
 
 resource districts 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2024-05-15' = {
-  name: '${cosmos.name}/${databaseName}/districts'
+  name: 'districts'
+  parent: database
+  dependsOn: [
+    database
+  ]
   properties: {
     resource: {
       id: 'districts'
@@ -59,7 +68,11 @@ resource districts 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/container
 }
 
 resource events 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2024-05-15' = {
-  name: '${cosmos.name}/${databaseName}/events'
+  name: 'events'
+  parent: database
+  dependsOn: [
+    database
+  ]
   properties: {
     resource: {
       id: 'events'
