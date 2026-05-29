@@ -5,14 +5,15 @@ param envName string = 'dev'
 param containerImage string = 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
 param enableEventHubs bool = false
 
+var envSlug = toLower(replace(envName, '_', '-'))
 var suffix = uniqueString(resourceGroup().id, envName)
 var storageName = 'striyadh${take(suffix, 15)}'
-var cosmosName = 'cosmos-riyadh-mobility-${envName}'
-var mapsName = 'maps-riyadh-mobility-${envName}'
-var logName = 'log-riyadh-mobility-${envName}'
-var appInsightsName = 'appi-riyadh-mobility-${envName}'
-var containerEnvName = 'cae-riyadh-mobility-${envName}'
-var containerAppName = 'ca-riyadh-mobility-api-${envName}'
+var cosmosName = 'cosmos-riyadh-mobility-${envSlug}'
+var mapsName = 'maps-riyadh-mobility-${envSlug}'
+var logName = 'log-riyadh-mobility-${envSlug}'
+var appInsightsName = 'appi-riyadh-mobility-${envSlug}'
+var containerEnvName = 'cae-riyadh-mobility-${envSlug}'
+var containerAppName = 'ca-riyadh-mobility-api-${envSlug}'
 
 module monitoring './modules/monitoring.bicep' = {
   name: 'monitoring'
@@ -69,7 +70,7 @@ module optionalEventHubs './modules/optional-eventhubs.bicep' = if (enableEventH
   name: 'optionalEventHubs'
   params: {
     location: location
-    namespaceName: 'evhns-riyadh-${envName}'
+    namespaceName: 'evhns-riyadh-${envSlug}'
   }
 }
 
