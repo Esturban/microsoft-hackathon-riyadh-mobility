@@ -5,6 +5,7 @@ param logAnalyticsWorkspaceId string
 param logAnalyticsSharedKey string
 param appInsightsConnectionString string
 param containerImage string
+param registryServer string
 param mapsKey string
 param storageConnectionString string
 param cosmosEndpoint string
@@ -37,6 +38,12 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = {
         external: true
         targetPort: 8000
       }
+      registries: [
+        {
+          server: registryServer
+          identity: 'system'
+        }
+      ]
       secrets: [
         {
           name: 'maps-key'

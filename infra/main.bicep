@@ -16,6 +16,7 @@ var containerEnvName = 'cae-riyadh-mobility-${envSlug}'
 var shortEnvSlug = take(envSlug, 12)
 var shortSuffix = take(suffix, 6)
 var containerAppName = 'ca-rmd-api-${shortEnvSlug}-${shortSuffix}'
+var containerRegistryName = 'acrrmd${take(suffix, 18)}'
 
 module monitoring './modules/monitoring.bicep' = {
   name: 'monitoring'
@@ -51,6 +52,14 @@ module maps './modules/maps.bicep' = {
   }
 }
 
+module containerRegistry './modules/container-registry.bicep' = {
+  name: 'containerRegistry'
+  params: {
+    location: location
+    registryName: containerRegistryName
+  }
+}
+
 module containerApp './modules/container-app.bicep' = {
   name: 'containerApp'
   params: {
@@ -61,6 +70,7 @@ module containerApp './modules/container-app.bicep' = {
     logAnalyticsSharedKey: monitoring.outputs.logAnalyticsSharedKey
     appInsightsConnectionString: monitoring.outputs.appInsightsConnectionString
     containerImage: containerImage
+    registryServer: containerRegistry.outputs.loginServer
     mapsKey: maps.outputs.primaryKey
     storageConnectionString: storage.outputs.connectionString
     cosmosEndpoint: cosmos.outputs.endpoint
@@ -80,6 +90,10 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' existing 
   name: storageName
 }
 
+resource registry 'Microsoft.ContainerRegistry/registries@2023-07-01' existing = {
+  name: containerRegistryName
+}
+
 resource blobReaderRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(storageName, containerAppName, 'blob-reader')
   scope: storageAccount
@@ -93,8 +107,22 @@ resource blobReaderRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   }
 }
 
+resource acrPullRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(containerRegistryName, containerAppName, 'acr-pull')
+  scope: registry
+  properties: {
+    principalId: containerApp.outputs.principalId
+    roleDefinitionId: subscriptionResourceId(
+      'Microsoft.Authorization/roleDefinitions',
+      '7f951dda-4ed3-4680-a7ca-43fe172d538d'
+    )
+    principalType: 'ServicePrincipal'
+  }
+}
+
 output WEB_APP_URL string = containerApp.outputs.url
 output AZURE_MAPS_ACCOUNT_NAME string = mapsName
 output STORAGE_ACCOUNT_NAME string = storageName
 output COSMOS_DATABASE_NAME string = 'mobilitydb'
+output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerRegistry.outputs.loginServer
 output RESOURCE_GROUP_NAME string = resourceGroup().name
