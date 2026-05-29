@@ -3,35 +3,102 @@
   "features": [
     {
       "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [46.7194, 24.6916] },
       "properties": {
         "districtId": "central-riyadh",
-        "name": "Central Riyadh"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [46.6753, 24.7136]
+        "name": "Central Riyadh",
+        "nameAr": "وسط الرياض",
+        "description": "The historical and administrative heart of Riyadh, home to Al-Murabba Palace and key government institutions."
       }
     },
     {
       "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [46.6857, 24.6981] },
       "properties": {
         "districtId": "olaya",
-        "name": "Olaya"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [46.6750, 24.6950]
+        "name": "Olaya",
+        "nameAr": "العليا",
+        "description": "Riyadh's premier business and commercial corridor, lined with towers, hotels, and retail destinations."
       }
     },
     {
       "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [46.7310, 24.7071] },
       "properties": {
         "districtId": "malaz",
-        "name": "Al Malaz"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [46.7230, 24.6660]
+        "name": "Al Malaz",
+        "nameAr": "الملز",
+        "description": "A vibrant mixed-use residential and commercial district in the eastern inner city."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [46.6429, 24.7731] },
+      "properties": {
+        "districtId": "kafd",
+        "name": "King Abdullah Financial District",
+        "nameAr": "مركز الملك عبدالله المالي",
+        "description": "KAFD is Riyadh's modern financial hub — a master-planned mixed-use district on the northern edge of the city."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [46.6314, 24.6917] },
+      "properties": {
+        "districtId": "diplomatic-quarter",
+        "name": "Diplomatic Quarter",
+        "nameAr": "الحي الدبلوماسي",
+        "description": "A leafy enclave in western Riyadh housing embassies, residences, and parks — one of the most walkable areas in the city."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [46.6832, 24.6842] },
+      "properties": {
+        "districtId": "king-fahd-district",
+        "name": "King Fahd District",
+        "nameAr": "حي الملك فهد",
+        "description": "Named after King Fahd Road — a major business and retail artery connecting northern and central Riyadh."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [46.7450, 24.7218] },
+      "properties": {
+        "districtId": "nuzha",
+        "name": "Al Nuzha",
+        "nameAr": "النزهة",
+        "description": "A well-established residential district in northern Riyadh, known for parks and family amenities."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [46.7111, 24.7389] },
+      "properties": {
+        "districtId": "andalus",
+        "name": "Al Andalus",
+        "nameAr": "الأندلس",
+        "description": "A growing residential and mixed-use area in northern Riyadh with increasing transit connectivity."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [46.6290, 24.7020] },
+      "properties": {
+        "districtId": "aqiq",
+        "name": "Al Aqiq",
+        "nameAr": "العقيق",
+        "description": "An upscale western district featuring luxury villas, compounds, and proximity to the Diplomatic Quarter."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [46.7131, 24.6508] },
+      "properties": {
+        "districtId": "rawabi",
+        "name": "Al Rawabi",
+        "nameAr": "الروابي",
+        "description": "A southern Riyadh residential district with growing bus connectivity and urban expansion."
       }
     }
   ]

@@ -1,7 +1,7 @@
 import { api } from "./api.js";
 import { LAYER_IDS } from "./layers.js";
 import { createMap, focusDistrict, renderSources, setLayerVisibility } from "./map.js";
-import { renderDebug, renderKpis, renderScore } from "./scoringPanel.js";
+import { renderDebug, renderDistrictInfo, renderKpis, renderScore } from "./scoringPanel.js";
 
 async function boot() {
   window.__AZURE_MAPS_KEY__ = document
@@ -22,11 +22,13 @@ async function boot() {
   await renderSources(map, { metro, bus, districts, events });
   renderKpis(routes.items);
   renderDebug(dataStatus);
+  const dsCount = document.getElementById("hs-districts");
+  if (dsCount) dsCount.textContent = String(districts.items.length);
   bindControls(map, config, districts.items);
 
   document.getElementById("maps-status-badge").textContent = config.azureMapsEnabled
-    ? "Azure Maps live"
-    : `OpenStreetMap fallback (${config.dataMode})`;
+    ? "Azure Maps"
+    : "OpenStreetMap fallback";
 
   if (districts.items.length > 0) {
     await selectDistrict(map, config.accessBufferKm, districts.items[0]);
@@ -61,6 +63,7 @@ async function selectDistrict(map, accessBufferKm, district) {
   }
   const score = await api.getScore(district.districtId);
   renderScore(score);
+  renderDistrictInfo(district);
   await focusDistrict(map, district, accessBufferKm);
 }
 

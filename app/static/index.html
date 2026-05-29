@@ -4,90 +4,284 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Riyadh Mobility Intelligence Dashboard</title>
-    <link
-      rel="stylesheet"
-      href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/3/atlas.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin=""
-    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/3/atlas.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <link rel="stylesheet" href="/src/styles.css" />
   </head>
   <body>
-    <div class="shell">
-      <header class="hero">
-        <div>
-          <p class="eyebrow">Hackathon Starter</p>
-          <h1>Riyadh Mobility Intelligence Dashboard</h1>
-          <p class="subtitle">
-            Public mobility layers, district accessibility scoring, and Azure-ready deployment in one beginner-friendly MVP.
+    <div class="app-shell">
+
+      <!-- TOP NAV -->
+      <nav class="topnav">
+        <div class="topnav-inner">
+          <div class="brand">
+            <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>
+            </svg>
+            <span class="brand-text">Riyadh Mobility</span>
+            <span class="brand-tag">Hackathon Starter</span>
+          </div>
+          <div class="nav-badges">
+            <span id="data-status-badge" class="nbadge nbadge-green">Loading…</span>
+            <span id="maps-status-badge" class="nbadge nbadge-blue">Checking maps…</span>
+          </div>
+        </div>
+      </nav>
+
+      <!-- HERO -->
+      <header class="hero-section">
+        <div class="hero-content">
+          <p class="hero-eyebrow">Riyadh Urban Intelligence Lab &mdash; 2026</p>
+          <h1 class="hero-title">
+            <span class="hero-en">Mobility Intelligence</span>
+            <span class="hero-ar">لوحة التنقل الذكي</span>
+          </h1>
+          <p class="hero-sub">
+            6 real metro lines &amp; 100+ bus routes from RCRC open data. Select any Riyadh district
+            to compute a transit accessibility score — stored in Azure Cosmos DB, served by Azure Container Apps.
           </p>
         </div>
-        <div class="status-wrap">
-          <span id="data-status-badge" class="badge">Loading data mode…</span>
-          <span id="maps-status-badge" class="badge badge-muted">Checking map mode…</span>
+        <div class="hero-stats">
+          <div class="hstat">
+            <strong id="hs-metro">6</strong>
+            <span>Metro lines</span>
+          </div>
+          <div class="hstat">
+            <strong id="hs-bus">100+</strong>
+            <span>Bus routes</span>
+          </div>
+          <div class="hstat">
+            <strong id="hs-districts">10</strong>
+            <span>Districts</span>
+          </div>
+          <div class="hstat">
+            <strong>RCRC</strong>
+            <span>Open data</span>
+          </div>
         </div>
       </header>
 
-      <main class="layout">
-        <section class="map-card">
-          <div class="toolbar">
-            <label><input type="checkbox" id="toggle-metro" checked /> Metro</label>
-            <label><input type="checkbox" id="toggle-bus" checked /> Bus</label>
-            <label><input type="checkbox" id="toggle-events" checked /> Live events</label>
-            <select id="district-select"></select>
+      <!-- METRO LEGEND BAR -->
+      <div class="metro-legend-bar">
+        <span class="legend-label">Metro lines (real RCRC data):</span>
+        <div class="legend-lines" id="metro-legend">
+          <span class="legend-pill" style="--lc:#00ade5">Blue — SAB Bank ↔ Ad Dar Al Baida</span>
+          <span class="legend-pill" style="--lc:#f0493a">Red — KSU ↔ King Fahad Sport City</span>
+          <span class="legend-pill" style="--lc:#f68d39">Orange — Jeddah Rd ↔ Khashm Al An</span>
+          <span class="legend-pill" style="--lc:#ffd105;color:#5a4400">Yellow — Airport ↔ KAFD</span>
+          <span class="legend-pill" style="--lc:#43b649">Green — Ministry of Ed ↔ Nat'l Museum</span>
+          <span class="legend-pill" style="--lc:#984c9d">Purple — KAFD ↔ An Naseem</span>
+        </div>
+      </div>
+
+      <!-- MAIN GRID -->
+      <main class="main-grid">
+
+        <!-- MAP COLUMN -->
+        <section class="map-column">
+          <div class="map-card">
+            <div class="map-toolbar">
+              <div class="toolbar-layers">
+                <label class="toggle-pill">
+                  <input type="checkbox" id="toggle-metro" checked />
+                  <span class="pill-track"><span class="pill-dot" style="background:#00ade5"></span></span>
+                  Metro
+                </label>
+                <label class="toggle-pill">
+                  <input type="checkbox" id="toggle-bus" checked />
+                  <span class="pill-track"><span class="pill-dot" style="background:#f97316"></span></span>
+                  Bus routes
+                </label>
+                <label class="toggle-pill">
+                  <input type="checkbox" id="toggle-events" checked />
+                  <span class="pill-track"><span class="pill-dot" style="background:#dc2626"></span></span>
+                  Live events
+                </label>
+              </div>
+              <div class="toolbar-district">
+                <label class="select-label" for="district-select">District</label>
+                <select id="district-select" class="district-select"></select>
+              </div>
+            </div>
+            <div id="map" class="map-view"></div>
+            <p id="map-fallback" class="map-fallback hidden">
+              <strong>OpenStreetMap fallback active.</strong>
+              Add <code>AZURE_MAPS_KEY</code> to <code>.env</code> for satellite tiles and the full Azure Maps SDK.
+            </p>
           </div>
-          <div id="map"></div>
-          <p id="map-fallback" class="map-fallback hidden">
-            Azure Maps browser credentials are not configured. The app is using an OpenStreetMap fallback so you can still explore layers locally.
-          </p>
         </section>
 
-        <aside class="side-panel">
-          <section class="kpis">
-            <article class="kpi">
-              <span>Metro routes</span>
-              <strong id="kpi-metro">0</strong>
-            </article>
-            <article class="kpi">
-              <span>Bus routes</span>
-              <strong id="kpi-bus">0</strong>
-            </article>
-            <article class="kpi">
-              <span>Selected district</span>
-              <strong id="kpi-district">None</strong>
-            </article>
-            <article class="kpi accent">
-              <span>Accessibility score</span>
-              <strong id="kpi-score">0</strong>
-            </article>
-          </section>
+        <!-- SIDE PANEL -->
+        <aside class="side-column">
 
-          <section class="panel">
-            <h2>Score explanation</h2>
-            <p id="score-text">Select a district to calculate its score.</p>
+          <!-- KPI CARDS -->
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <span class="kpi-icon">&#9644;</span>
+              <span class="kpi-label">Metro routes</span>
+              <strong class="kpi-value" id="kpi-metro">—</strong>
+            </div>
+            <div class="kpi-card">
+              <span class="kpi-icon">&#9656;</span>
+              <span class="kpi-label">Bus routes</span>
+              <strong class="kpi-value" id="kpi-bus">—</strong>
+            </div>
+            <div class="kpi-card kpi-span2">
+              <span class="kpi-icon">&#9711;</span>
+              <span class="kpi-label">Selected district</span>
+              <strong class="kpi-value kpi-district" id="kpi-district">None selected</strong>
+            </div>
+            <div class="kpi-card kpi-accent kpi-span2">
+              <span class="kpi-icon">&#9651;</span>
+              <span class="kpi-label">Accessibility score</span>
+              <strong class="kpi-value kpi-score-val" id="kpi-score">—</strong>
+            </div>
+          </div>
+
+          <!-- SCORE PANEL -->
+          <div class="panel score-panel">
+            <div class="panel-header">
+              <h2>Transit Score</h2>
+            </div>
+            <p id="score-text" class="score-placeholder">Select a district above to compute its transit accessibility score.</p>
+            <div class="score-detail hidden" id="score-detail">
+              <div class="score-bars" id="score-bars"></div>
+              <code class="score-formula" id="formula-text"></code>
+            </div>
             <p class="disclaimer">
-              This score is a hackathon-friendly proxy. It is not a formal transport-planning model. It is designed to show how public mobility data, cloud storage, and simple analytics can support district-level planning conversations.
+              Hackathon-friendly proxy — not a formal transport model. Designed to show how open data, cloud storage, and simple scoring can support district-level planning conversations.
             </p>
-          </section>
+          </div>
 
-          <section class="panel">
-            <h2>Debug panel</h2>
+          <!-- DISTRICT INFO -->
+          <div class="panel district-info hidden" id="district-info">
+            <div class="panel-header">
+              <h2 id="district-info-name">District</h2>
+              <span class="name-ar" id="district-info-ar"></span>
+            </div>
+            <p id="district-info-desc" class="district-desc"></p>
+          </div>
+
+          <!-- AZURE STACK EXPLAINER -->
+          <div class="panel stack-panel">
+            <div class="panel-header">
+              <h2>Azure Stack</h2>
+              <span class="panel-tag">How this app is built</span>
+            </div>
+            <div class="stack-list">
+              <div class="stack-item">
+                <div class="stack-dot" style="--sc:#0078d4"></div>
+                <div class="stack-text">
+                  <strong>Container Apps</strong>
+                  <span>Hosts the FastAPI API + this frontend in one container — no Kubernetes needed</span>
+                </div>
+              </div>
+              <div class="stack-item">
+                <div class="stack-dot" style="--sc:#00b294"></div>
+                <div class="stack-text">
+                  <strong>Azure Maps</strong>
+                  <span>Renders map tiles, GeoJSON layers, popups, and the 1.5 km access buffer</span>
+                </div>
+              </div>
+              <div class="stack-item">
+                <div class="stack-dot" style="--sc:#e8a000"></div>
+                <div class="stack-text">
+                  <strong>Blob Storage</strong>
+                  <span>Stores raw and processed GeoJSON from RCRC — the app reads it at startup</span>
+                </div>
+              </div>
+              <div class="stack-item">
+                <div class="stack-dot" style="--sc:#0091ff"></div>
+                <div class="stack-text">
+                  <strong>Cosmos DB</strong>
+                  <span>Stores route summaries, district scores, and simulated live delay events</span>
+                </div>
+              </div>
+              <div class="stack-item">
+                <div class="stack-dot" style="--sc:#5c2d91"></div>
+                <div class="stack-text">
+                  <strong>App Insights</strong>
+                  <span>Tracks request latency, errors, and health across the deployed app</span>
+                </div>
+              </div>
+            </div>
+            <div class="stack-deploy">
+              <code class="deploy-cmd">azd up</code>
+              <span class="deploy-note">deploys all five services into one Azure resource group</span>
+            </div>
+          </div>
+
+          <!-- OPEN DATA SOURCES -->
+          <div class="panel data-sources-panel">
+            <div class="panel-header">
+              <h2>Open Data Sources</h2>
+              <span class="panel-tag">Direct links to raw datasets</span>
+            </div>
+            <div class="source-list">
+              <a class="source-item" href="https://opendata.rcrc.gov.sa/explore/dataset/metro-lines-in-riyadh-2024/information/" target="_blank" rel="noopener">
+                <div class="source-dot" style="--sc:#00ade5"></div>
+                <div class="source-text">
+                  <strong>RCRC Metro Lines — Riyadh 2024</strong>
+                  <span>6 metro lines, geometry, stations, official line colors</span>
+                  <code class="source-url">opendata.rcrc.gov.sa ↗</code>
+                </div>
+              </a>
+              <a class="source-item" href="https://opendata.rcrc.gov.sa/explore/dataset/bus-roads-by-direction-in-riyadh-2024/information/" target="_blank" rel="noopener">
+                <div class="source-dot" style="--sc:#f97316"></div>
+                <div class="source-text">
+                  <strong>RCRC Bus Roads by Direction — 2024</strong>
+                  <span>100+ bus routes with origin, destination, and route geometry</span>
+                  <code class="source-url">opendata.rcrc.gov.sa ↗</code>
+                </div>
+              </a>
+              <a class="source-item" href="https://www.alriyadh.gov.sa/en/realtime-data" target="_blank" rel="noopener">
+                <div class="source-dot" style="--sc:#5c2d91"></div>
+                <div class="source-text">
+                  <strong>Riyadh Municipality Realtime Data</strong>
+                  <span>AQI, parking, and interactive city data — explore for extensions</span>
+                  <code class="source-url">alriyadh.gov.sa ↗</code>
+                </div>
+              </a>
+            </div>
+            <p class="source-note">
+              Data fetched via RCRC Opendatasoft API and stored in Azure Blob Storage.
+              Run <code>python scripts/fetch_rcrc_data.py</code> to refresh.
+            </p>
+          </div>
+
+          <!-- DEBUG (collapsed by default) -->
+          <details class="panel debug-panel">
+            <summary>Data source debug</summary>
             <pre id="debug-panel">Loading…</pre>
-          </section>
+          </details>
+
         </aside>
       </main>
+
+      <!-- FOOTER -->
+      <footer class="app-footer">
+        <div class="footer-inner">
+          <div class="footer-left">
+            <strong>Data:</strong>
+            <a href="https://opendata.rcrc.gov.sa/explore/dataset/metro-lines-in-riyadh-2024/information/" target="_blank" rel="noopener">RCRC Metro Lines 2024</a>
+            &middot;
+            <a href="https://opendata.rcrc.gov.sa/explore/dataset/bus-roads-by-direction-in-riyadh-2024/information/" target="_blank" rel="noopener">RCRC Bus Routes 2024</a>
+            &middot;
+            <a href="https://www.alriyadh.gov.sa/en/realtime-data" target="_blank" rel="noopener">Riyadh Municipality</a>
+          </div>
+          <div class="footer-right">
+            &copy; 2026 &middot; Built with Microsoft Azure &middot; atomcamp Arabia &middot; Riyadh Urban Intelligence Lab
+          </div>
+        </div>
+      </footer>
+
     </div>
 
     <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/3/atlas.min.js"></script>
-    <script
-      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-      crossorigin=""
-    ></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

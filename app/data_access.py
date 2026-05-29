@@ -190,8 +190,7 @@ def load_districts() -> tuple[list[dict], str]:
             else 0
         )
         score_data = compute_accessibility_score(metro_count, bus_count, delay_penalty)
-        districts.append(
-            {
+        doc = {
                 "id": f"district-{props['districtId']}",
                 "districtId": props["districtId"],
                 "name": props["name"],
@@ -202,7 +201,11 @@ def load_districts() -> tuple[list[dict], str]:
                 "accessibilityRating": score_data["rating"],
                 "lastCalculatedUtc": "2026-05-24T00:00:00Z",
             }
-        )
+        if props.get("nameAr"):
+            doc["nameAr"] = props["nameAr"]
+        if props.get("description"):
+            doc["description"] = props["description"]
+        districts.append(doc)
     return districts, source
 
 

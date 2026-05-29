@@ -113,19 +113,22 @@ def build_district_docs() -> list[dict]:
         bus_count = count_nearby_features(bus, lat, lon, 1.5)
         live_delay_penalty = compute_delay_penalty(lat, lon, events, 1.5)
         score = compute_accessibility_score(metro_count, bus_count, live_delay_penalty)
-        docs.append(
-            {
-                "id": f"district-{props['districtId']}",
-                "districtId": props["districtId"],
-                "name": props["name"],
-                "center": {"lat": lat, "lon": lon},
-                "nearbyMetroCount": metro_count,
-                "nearbyBusCount": bus_count,
-                "accessibilityScore": score["score"],
-                "accessibilityRating": score["rating"],
-                "lastCalculatedUtc": "2026-05-24T00:00:00Z",
-            }
-        )
+        doc = {
+            "id": f"district-{props['districtId']}",
+            "districtId": props["districtId"],
+            "name": props["name"],
+            "center": {"lat": lat, "lon": lon},
+            "nearbyMetroCount": metro_count,
+            "nearbyBusCount": bus_count,
+            "accessibilityScore": score["score"],
+            "accessibilityRating": score["rating"],
+            "lastCalculatedUtc": "2026-05-24T00:00:00Z",
+        }
+        if props.get("nameAr"):
+            doc["nameAr"] = props["nameAr"]
+        if props.get("description"):
+            doc["description"] = props["description"]
+        docs.append(doc)
     return docs
 
 
