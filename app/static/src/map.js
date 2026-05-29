@@ -39,8 +39,12 @@ export function createMap(config, domIds) {
 
 function installPopup(map) {
   const popup = new atlas.Popup({ closeButton: true, pixelOffset: [0, -18] });
-  [LAYER_IDS.metroLayer, LAYER_IDS.busLayer, LAYER_IDS.eventsLayer].forEach((layerId) => {
-    map.events.add("click", layerId, (event) => {
+  const layers = [LAYER_IDS.metroLayer, LAYER_IDS.busLayer, LAYER_IDS.eventsLayer]
+    .map((layerId) => map.layers.getLayerById(layerId))
+    .filter(Boolean);
+
+  layers.forEach((layer) => {
+    map.events.add("click", layer, (event) => {
       const shape = event.shapes?.[0];
       if (!shape) {
         return;
