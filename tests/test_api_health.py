@@ -24,3 +24,13 @@ def test_config_is_safe_for_frontend():
     payload = response.json()
     assert "azureMapsKey" not in payload
     assert payload["dataMode"] in {"sample", "blob", "cosmos", "auto"}
+
+
+def test_frontend_assets_disable_caching():
+    root = client.get("/")
+    script = client.get("/src/main.js")
+
+    assert root.status_code == 200
+    assert script.status_code == 200
+    assert root.headers["cache-control"] == "no-store, max-age=0"
+    assert script.headers["cache-control"] == "no-store, max-age=0"
