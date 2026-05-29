@@ -1,8 +1,32 @@
+# OpenWolf / Claude tooling
 .wolf/
 .claude/
 .codegraph/
+.codex/
+.agent-config.toml
+
+# Python
 __pycache__/
 *.pyc
+*.pyo
 .pytest_cache/
 .venv/
+venv/
+
+# Secrets and environment
 .env
+.env.*
+!.env.example
+
+# Azure Developer CLI (contains subscription ID and env-specific values)
+.azure/
+
+# Downloaded data (regenerate via scripts/fetch_rcrc_data.py)
+data/
+
+# Node
+node_modules/
+package-lock.json
+
+# macOS
+.DS_Store
