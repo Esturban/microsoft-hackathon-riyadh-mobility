@@ -1,12 +1,12 @@
 # Riyadh Mobility Intelligence Dashboard
 
-A beginner-friendly Riyadh hackathon starter kit for mapping metro and bus routes, selecting districts, and calculating a simple mobility access score.
+Map Riyadh metro and bus routes, select districts, and calculate a mobility access score.
 
-The app is intentionally small: FastAPI backend, vanilla JavaScript frontend, bundled sample data, and an Azure-backed live path for teams that want to deploy.
+The app includes a FastAPI backend, a vanilla JavaScript frontend, bundled sample data, and an optional Azure deployment path.
 
 ## What You Build
 
-This starter kit helps a team show:
+Use this app to show:
 
 - Riyadh metro and bus layers on a map
 - district selection and a simple access score
@@ -14,12 +14,12 @@ This starter kit helps a team show:
 - a fallback-aware data path that works without cloud credentials
 - an Azure deployment path using Container Apps, Azure Maps, Blob Storage, Cosmos DB, Application Insights, `azd`, and Bicep
 
-For the full build guide, use:
+Need the full build guide?
 
 - `docs/rebuild_guide.md`
 - `docs/rebuild_guide.docx`
 
-More supporting notes live in `docs/README.md`.
+Open `docs/README.md` for architecture, testing, deployment, data, and demo notes.
 
 ## Quick Start
 
@@ -149,14 +149,14 @@ bash scripts/destroy_resource_group.sh --yes
 
 ## Demo Script
 
-Use this 5-minute flow:
+Use this demo flow:
 
-1. Open the dashboard and explain that it is a Riyadh mobility starter kit.
+1. Open the dashboard and introduce the app.
 2. Toggle metro and bus layers to show public transport coverage.
 3. Select a district and explain the score formula.
 4. Open `/api/data-status` to show fallback-aware data loading.
-5. Describe the Azure-backed live layer: Container Apps, Azure Maps, Blob Storage, Cosmos DB, and Application Insights.
-6. Explain how a team could adapt the same scaffold for mobility, district intelligence, sustainability, or culture use cases.
+5. Show the Azure services used by the app: Container Apps, Azure Maps, Blob Storage, Cosmos DB, and Application Insights.
+6. Show how to adapt the app for mobility, district intelligence, sustainability, or culture use cases.
 
 ## Extension Ideas
 

@@ -1,6 +1,6 @@
 # CI and Testing Guide
 
-This document explains the test suite, how to run it, what each test covers, and how to extend it.
+Run the test suite, check what each test covers, and add new tests safely.
 
 ---
 
@@ -55,7 +55,7 @@ tests/
 | `test_config_is_safe_for_frontend` | `/api/config` never leaks `azureMapsKey` |
 | `test_frontend_assets_disable_caching` | HTML and JS assets carry `no-store` cache headers |
 
-The caching test is critical: browsers cache aggressively. The `no-store` header ensures builders always see their latest code during a demo without hard-refreshing.
+The caching test verifies that HTML and JS assets use `no-store` so the browser loads the latest code.
 
 ---
 

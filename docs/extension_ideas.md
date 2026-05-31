@@ -1,6 +1,6 @@
 # Extension Ideas
 
-Ideas for teams to extend the starter kit during the hackathon. Organized by effort level and hackathon track alignment.
+Use these extension ideas to add features during the hackathon. They are grouped by effort level and track.
 
 ---
 

@@ -65,7 +65,7 @@ PYTHONPATH=. python3 scripts/seed_cosmos.py  # optional: seed Cosmos DB
 
 The app must keep working from bundled sample data if remote sources or Azure services are unavailable.
 
-This is the core design constraint. A broken network connection, an expired API key, or a missing Azure environment should never cause the dashboard to stop loading. The fallback chain — Cosmos DB → Blob Storage → sample files — enforces this at the data layer.
+Always keep the dashboard working from bundled sample data. If remote sources or Azure services fail, fall back to Cosmos DB, Blob Storage, or sample files in that order.
 
 ---
 

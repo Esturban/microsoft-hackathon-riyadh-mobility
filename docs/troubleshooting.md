@@ -125,7 +125,7 @@ If the container exits, the error usually points to a missing module or a bad `r
 
 ## Getting Help
 
-If you are running this during a hackathon:
+If you need help:
 
 1. Check this troubleshooting page first.
 2. Run `python -m pytest -v` to confirm the backend is intact.

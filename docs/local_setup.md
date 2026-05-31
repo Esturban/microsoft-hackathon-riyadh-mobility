@@ -1,6 +1,6 @@
 # Local Setup
 
-Get a working dashboard in under five minutes. No Azure credentials required.
+Run the dashboard locally with bundled sample data. No Azure credentials required.
 
 ---
 

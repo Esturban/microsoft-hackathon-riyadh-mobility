@@ -9,7 +9,7 @@
 
 ## Deploy with the current azd environment
 
-This repo includes a thin helper script that shows the active environment values before deployment:
+Run this helper script to show the active environment values before deployment:
 
 ```bash
 bash scripts/deploy_azure.sh
@@ -23,7 +23,7 @@ bash scripts/deploy_azure.sh eastus rg-riyadh-ud-eastus
 
 The script updates `AZURE_LOCATION` and `AZURE_RESOURCE_GROUP` when you pass arguments, prints `azd env get-values`, and then runs `azd up`.
 
-## Recommended hackathon flow
+## Deployment Workflow
 
 1. Reuse one resource group instead of creating new ones repeatedly.
 2. Keep the same `azd` environment for the full demo cycle.

@@ -2,7 +2,7 @@
 
 ## System Overview
 
-The Riyadh Mobility Intelligence Dashboard is a single-container web application with a fallback-aware data layer and an optional Azure services path.
+The app runs as a single-container web application with fallback-aware data loading and an optional Azure path.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -87,7 +87,7 @@ Fall back to bundled sample files  ───────────────
     app/static/sample-data/
 ```
 
-Key principle: the demo should always be explainable from sample data. Cloud services add credibility, not dependency.
+Always keep the app working from sample data. If Azure services are unavailable, fall back to bundled files.
 
 ---
 

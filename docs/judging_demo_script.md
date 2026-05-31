@@ -1,6 +1,6 @@
 # Judging Demo Script
 
-A short demo script for pitching the Riyadh Mobility Intelligence Dashboard to hackathon judges.
+Use this script for a 5-7 minute demo of the Riyadh Mobility Intelligence Dashboard.
 
 Target: 5–7 minutes. No slides required.
 
@@ -19,7 +19,7 @@ Target: 5–7 minutes. No slides required.
 
 Show the full dashboard view on load.
 
-> "This is the Riyadh Mobility Intelligence Dashboard. It shows metro and bus coverage across Riyadh, calculates a district accessibility score, and runs on an Azure-backed architecture. We built it as a starter kit — a reusable scaffold that any hackathon team can adapt."
+> "This is the Riyadh Mobility Intelligence Dashboard. It shows metro and bus coverage across Riyadh, calculates a district accessibility score, and runs on an Azure-backed architecture. It includes a reusable app structure that you can adapt for other use cases."
 
 Point to:
 - the Riyadh map centered on the city
@@ -34,7 +34,7 @@ Toggle metro off, then on. Toggle bus off, then on.
 
 > "The map pulls metro and bus data from the RCRC open datasets — six metro lines and a hundred bus routes. In sample mode it runs entirely from bundled files. In cloud mode it reads from Azure Blob Storage or Cosmos DB."
 
-> "Each layer is a GeoJSON FeatureCollection served by a FastAPI endpoint. Builders can replace or extend any layer just by changing the data pipeline."
+> "Each layer is a GeoJSON FeatureCollection served by a FastAPI endpoint. You can replace or extend any layer by updating the data pipeline."
 
 ---
 
@@ -49,7 +49,7 @@ Point to the score panel:
 - the formula breakdown (metro count × 3 + bus count − penalty)
 - the Low / Medium / High rating
 
-> "The formula is intentionally transparent. Teams can adjust the weights, the buffer radius, or the penalty logic to fit a different track — walkability, pollution access, heritage routing."
+> "The formula is simple to change. Update the weights, buffer radius, or penalty logic to fit another use case."
 
 ---
 
@@ -75,7 +75,7 @@ Describe the cloud-live path without switching screens.
 
 ## Step 6 — Explain the Starter Kit Routes (60 seconds)
 
-> "The most important thing about this scaffold is that it is not just a mobility dashboard. The same architecture supports four hackathon tracks."
+> "The same app structure also supports other hackathon tracks."
 
 | Track | Extension path |
 |---|---|
@@ -84,7 +84,7 @@ Describe the cloud-live path without switching screens.
 | Sustainable Solutions | overlay AQI, heat, or emissions data alongside route coverage |
 | Culture | adapt the map for heritage sites, event routing, and visitor movement |
 
-> "Any team can fork this starter kit, remove the mobility data, and replace it with data for their track — using the same FastAPI backend, the same Azure services, and the same scoring pattern."
+> "Fork the repo, replace the mobility data, and reuse the same backend, Azure services, and scoring pattern."
 
 ---
 

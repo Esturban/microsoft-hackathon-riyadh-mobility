@@ -10,17 +10,17 @@ lang: "en-US"
 
 ## Build Guide for the Riyadh Urban Intelligence Lab
 
-Prepared for atomcamp Arabia and the Riyadh Urban Development Hackathon in collaboration with Microsoft.
+For atomcamp Arabia and the Riyadh Urban Development Hackathon in collaboration with Microsoft.
 
-You have the code. This guide explains what the starter kit is, how it fits the hackathon tracks, how the app is built, and how teams can adapt it into their own mobility, district intelligence, sustainability, or visitor-experience prototypes.
+Understand the app, run it locally, and adapt it for another use case.
 
-This guide is not meant to document every internal line of code. It gives builders and mentors a clear map of the product, the architecture, the Azure services, and the extension routes.
+Focus on the working path first: local app, data flow, map layers, score panel, Azure deployment, and safe extension routes.
 
 ## Before You Start
 
-This guide accompanies the `riyadh-mobility-intelligence-dashboard` codebase. It is written for hackathon builders who need to understand the app quickly, run it locally, explain it to mentors, and adapt it into a track-aligned MVP.
+Use these steps to understand the app quickly, run it locally, explain it, and adapt it into an MVP.
 
-After following this guide, a builder should be able to:
+By the end, you can:
 
 - run the starter kit locally with bundled sample data
 - explain the app as a mobility intelligence scaffold, not only a dashboard
@@ -37,14 +37,14 @@ What you need before starting:
 - optional Azure account for the cloud-live path
 - optional Azure CLI and Azure Developer CLI for deployment
 
-Useful references to keep nearby:
+Open these when needed:
 
-| Document | Use it for |
+| Open | When you need |
 |---|---|
 | `README.md` | student quickstart, local run, deploy, demo flow, and troubleshooting |
-| `docs/README.md` | documentation map for supporting notes |
-| `docs/rebuild_guide.md` | editable source for this guide |
-| `docs/rebuild_guide.docx` | formatted guide |
+| `docs/README.md` | docs index |
+| `docs/rebuild_guide.md` | Markdown build guide |
+| `docs/rebuild_guide.docx` | printable build guide |
 
 [Icon placement: partner/program row]  
 Add approved atomcamp Arabia, Microsoft, Riyadh Urban Intelligence Lab, and strategic partner marks here if brand assets are available.
@@ -62,7 +62,7 @@ The starter kit shows:
 - an Azure-backed live layer for deployment and data services
 - a pattern that can be reused for other hackathon tracks
 
-The important point is that this is not only a one-off mobility dashboard. It is a reusable scaffold for building urban intelligence applications during a four-day hackathon.
+Use this app as a mobility dashboard first, then reuse the same structure for other urban intelligence projects.
 
 ## Product Story
 
@@ -70,13 +70,13 @@ The app answers a simple question:
 
 > If a user selects a district in Riyadh, can we show nearby mobility infrastructure, explain the available route coverage, and turn that into a clear starter score?
 
-The current score is intentionally transparent:
+The current score uses this simple formula:
 
 ```text
 score = (nearby metro count x 3) + nearby bus count - live delay penalty
 ```
 
-This is not an official transport model. It is a teachable proxy that lets teams understand how data, scoring, APIs, map layers, and Azure services connect.
+This is a simplified model for learning how the data, scoring, APIs, map layers, and Azure services fit together.
 
 ## Services at a Glance
 
@@ -95,7 +95,7 @@ Show the browser view with the map centered on Riyadh, metro and bus layers avai
 
 # Section 1 — Hackathon Track Fit
 
-The Riyadh Urban Intelligence Lab is structured around four thematic tracks aligned to Riyadh urban challenges and Expo 2030 themes. This starter kit is built primarily for mobility, but it intentionally overlaps with more than one track.
+Map the starter kit to the four Riyadh Urban Intelligence Lab tracks. Start with mobility, then extend the same scaffold into people, sustainability, or culture use cases.
 
 ## Track Mapping
 
@@ -116,10 +116,10 @@ Sustainable Solutions and Culture are extension routes. They are not the first b
 
 ## Track-Aligned Pitch
 
-Use this pitch when presenting the starter kit:
+Use this summary when presenting the app:
 
 ```text
-This starter kit helps teams build a Riyadh mobility intelligence prototype using public route data, district scoring, Azure Maps, and an Azure-backed live layer. It supports the Transformational Technology track directly and can be extended into Prosperous People, Sustainable Solutions, or Culture use cases.
+Build a Riyadh mobility intelligence prototype with public route data, district scoring, Azure Maps, and an Azure-backed live layer. Use it directly for Transformational Technology, or extend it into Prosperous People, Sustainable Solutions, or Culture use cases.
 ```
 
 Add one small icon for each track: mobility/technology, people/districts, sustainability/environment, culture/visitor experience.
@@ -158,7 +158,7 @@ Browser
     -> Application Insights / Log Analytics
 ```
 
-This is not meant to become an enterprise platform during the hackathon. It is a credible deployment-ready starter kit that shows how a city app could move from local demo to pilot conversation.
+Use this Azure path to show how the local app can be deployed and extended with cloud services.
 
 Show a simple layer diagram with Browser, Container Apps, FastAPI, Azure Maps, Blob Storage, Cosmos DB, and App Insights.
 
@@ -166,7 +166,7 @@ Show a simple layer diagram with Browser, Container Apps, FastAPI, Azure Maps, B
 
 # Section 3 — Project Structure
 
-The project is intentionally small. Builders should be able to find the app shell, API, frontend, sample data, and deployment path quickly.
+The project is small enough to navigate quickly. Start with the app shell, API, frontend, sample data, and deployment files.
 
 ```text
 riyadh-mobility-intelligence-dashboard/
@@ -282,7 +282,7 @@ Key design principle: if Azure data is unavailable, the app should fall back to 
 
 ## Scoring
 
-The score is intentionally easy to explain:
+Keep the score easy to explain:
 
 ```text
 score = (nearby metro count x 3) + nearby bus count - live delay penalty
