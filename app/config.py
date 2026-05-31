@@ -41,10 +41,6 @@ class Settings(BaseSettings):
     event_hub_connection_string: str | None = None
     event_hub_name: str = "mobility-events"
 
-    azure_openai_endpoint: str | None = None
-    azure_openai_api_key: str | None = None
-    azure_openai_deployment: str | None = None
-
     blob_geojson_prefix: str = ""
     metro_blob_name: str = "metro_lines.geojson"
     bus_blob_name: str = "bus_routes.geojson"

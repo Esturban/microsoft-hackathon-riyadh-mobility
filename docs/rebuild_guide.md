@@ -37,17 +37,14 @@ What you need before starting:
 - optional Azure account for the cloud-live path
 - optional Azure CLI and Azure Developer CLI for deployment
 
-Companion docs to keep nearby:
+Companion references to keep nearby:
 
 | Document | Use it for |
 |---|---|
-| `spec.md` | scope, required Azure stack, and non-goals |
-| `docs/local_setup.md` | short local setup checklist |
-| `docs/architecture.md` | compact architecture sketch |
-| `docs/data_sources.md` | RCRC source notes and sample-data fallback rule |
-| `docs/azure_deployment.md` | Azure deployment commands |
-| `docs/judging_demo_script.md` | short presentation flow |
-| `docs/troubleshooting.md` | smoke tests and common issues |
+| `README.md` | student quickstart, local run, deploy, demo flow, and troubleshooting |
+| `docs/README.md` | documentation map for supporting notes |
+| `docs/rebuild_guide.md` | editable source for this companion |
+| `docs/rebuild_guide.docx` | polished handout version |
 
 [Icon placement: partner/program row]  
 Add approved atomcamp Arabia, Microsoft, Riyadh Urban Intelligence Lab, and strategic partner marks here if brand assets are available.
@@ -185,7 +182,7 @@ riyadh-mobility-intelligence-dashboard/
 │       └── sample-data/         # always-on sample files
 ├── scripts/                     # fetch, normalize, upload, seed, validate
 ├── infra/                       # Bicep modules
-├── docs/                        # setup, deployment, sources, demo notes
+├── docs/                        # polished rebuild guide
 ├── tests/                       # scoring, API, and data-shape checks
 └── azure.yaml                   # Azure Developer CLI project
 ```
@@ -199,7 +196,7 @@ riyadh-mobility-intelligence-dashboard/
 | Scoring | `app/scoring.py` | transparent district score |
 | Frontend | `app/static/src/main.js`, `map.js`, `layers.js` | app boot, map, and overlays |
 | Deployment | `azure.yaml`, `infra/main.bicep`, `scripts/deploy_azure.sh` | cloud-live path |
-| Demo | `docs/judging_demo_script.md` | judge-facing narrative |
+| Demo | `README.md` | short judge-facing narrative |
 
 Use a five-icon row for Backend, Data, Map, Scoring, Cloud-Live.
 
@@ -486,7 +483,7 @@ Key design principle: keep the first useful version single-page. Add pages only 
 
 ## Judge-Facing Demo Flow
 
-Use `docs/judging_demo_script.md` as the short presentation reference.
+Use the demo script in `README.md` as the short presentation reference.
 
 | Step | Show | Explain |
 |---:|---|---|
@@ -513,7 +510,7 @@ Stretch extensions:
 
 - Event Hubs for live event ingestion
 - Stream Analytics for live aggregation
-- Azure OpenAI for plain-English explanations
+- plain-English score explanations in the frontend or API
 - Azure Digital Twins for district or event simulation
 - Power Apps for field-service workflows
 
@@ -531,18 +528,16 @@ pytest
 bash scripts/deploy_azure.sh
 ```
 
-## Companion Document Index
+## Reference Index
 
 | Need | Open |
 |---|---|
-| project scope | `spec.md` |
-| local setup | `docs/local_setup.md` |
-| architecture sketch | `docs/architecture.md` |
-| source data | `docs/data_sources.md` |
-| Azure deployment | `docs/azure_deployment.md` |
-| judge demo | `docs/judging_demo_script.md` |
-| troubleshooting | `docs/troubleshooting.md` |
-| extension ideas | `docs/extension_ideas.md` |
+| student quickstart | `README.md` |
+| run, test, deploy, troubleshoot | `README.md` |
+| demo script | `README.md` |
+| documentation index | `docs/README.md` |
+| builder companion source | `docs/rebuild_guide.md` |
+| polished builder companion | `docs/rebuild_guide.docx` |
 
 ## Visual Asset Checklist
 
