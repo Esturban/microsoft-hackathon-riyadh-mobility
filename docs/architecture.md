@@ -173,7 +173,7 @@ riyadh-mobility-intelligence-dashboard/
 │
 ├── infra/                          Bicep infrastructure modules
 ├── tests/                          pytest suite
-├── docs/                           companion documentation
+├── docs/                           documentation
 ├── Dockerfile                      container definition
 ├── azure.yaml                      Azure Developer CLI project file
 ├── requirements.txt                Python dependencies

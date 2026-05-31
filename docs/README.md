@@ -7,8 +7,8 @@ This folder keeps the project guidance out of the repo root while preserving the
 | Document | Use it for |
 |---|---|
 | `../README.md` | student quickstart and common run/deploy commands |
-| `rebuild_guide.md` | client-facing builder companion source |
-| `rebuild_guide.docx` | polished handout version |
+| `rebuild_guide.md` | full build guide source |
+| `rebuild_guide.docx` | formatted build guide |
 
 ## Build And Operate
 

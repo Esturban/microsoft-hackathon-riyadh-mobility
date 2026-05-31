@@ -14,7 +14,7 @@ This starter kit helps a team show:
 - a fallback-aware data path that works without cloud credentials
 - an Azure deployment path using Container Apps, Azure Maps, Blob Storage, Cosmos DB, Application Insights, `azd`, and Bicep
 
-For the polished client-facing walkthrough, use:
+For the full build guide, use:
 
 - `docs/rebuild_guide.md`
 - `docs/rebuild_guide.docx`

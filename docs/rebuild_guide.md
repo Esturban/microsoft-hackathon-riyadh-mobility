@@ -1,6 +1,6 @@
 ---
 title: "Riyadh Mobility Intelligence Starter Kit"
-subtitle: "Builder Companion for the Riyadh Urban Intelligence Lab"
+subtitle: "Build Guide for the Riyadh Urban Intelligence Lab"
 author: "Prepared for atomcamp Arabia and the Riyadh Urban Development Hackathon in collaboration with Microsoft"
 date: "2026-05-30"
 lang: "en-US"
@@ -8,13 +8,13 @@ lang: "en-US"
 
 # Riyadh Mobility Intelligence Starter Kit
 
-## Builder Companion for the Riyadh Urban Intelligence Lab
+## Build Guide for the Riyadh Urban Intelligence Lab
 
 Prepared for atomcamp Arabia and the Riyadh Urban Development Hackathon in collaboration with Microsoft.
 
-You have the code. This companion explains what the starter kit is, how it fits the hackathon tracks, how the app is built, and how teams can adapt it into their own mobility, district intelligence, sustainability, or visitor-experience prototypes.
+You have the code. This guide explains what the starter kit is, how it fits the hackathon tracks, how the app is built, and how teams can adapt it into their own mobility, district intelligence, sustainability, or visitor-experience prototypes.
 
-This is a client-facing builder guide. It is not meant to document every internal line of code. It gives participants, mentors, and stakeholders a clear map of the product, the architecture, the Azure services, and the extension routes.
+This guide is not meant to document every internal line of code. It gives builders and mentors a clear map of the product, the architecture, the Azure services, and the extension routes.
 
 ## Before You Start
 
@@ -37,14 +37,14 @@ What you need before starting:
 - optional Azure account for the cloud-live path
 - optional Azure CLI and Azure Developer CLI for deployment
 
-Companion references to keep nearby:
+Useful references to keep nearby:
 
 | Document | Use it for |
 |---|---|
 | `README.md` | student quickstart, local run, deploy, demo flow, and troubleshooting |
 | `docs/README.md` | documentation map for supporting notes |
-| `docs/rebuild_guide.md` | editable source for this companion |
-| `docs/rebuild_guide.docx` | polished handout version |
+| `docs/rebuild_guide.md` | editable source for this guide |
+| `docs/rebuild_guide.docx` | formatted guide |
 
 [Icon placement: partner/program row]  
 Add approved atomcamp Arabia, Microsoft, Riyadh Urban Intelligence Lab, and strategic partner marks here if brand assets are available.
@@ -182,7 +182,7 @@ riyadh-mobility-intelligence-dashboard/
 │       └── sample-data/         # always-on sample files
 ├── scripts/                     # fetch, normalize, upload, seed, validate
 ├── infra/                       # Bicep modules
-├── docs/                        # polished rebuild guide
+├── docs/                        # build guide and supporting notes
 ├── tests/                       # scoring, API, and data-shape checks
 └── azure.yaml                   # Azure Developer CLI project
 ```
@@ -536,8 +536,8 @@ bash scripts/deploy_azure.sh
 | run, test, deploy, troubleshoot | `README.md` |
 | demo script | `README.md` |
 | documentation index | `docs/README.md` |
-| builder companion source | `docs/rebuild_guide.md` |
-| polished builder companion | `docs/rebuild_guide.docx` |
+| build guide source | `docs/rebuild_guide.md` |
+| formatted build guide | `docs/rebuild_guide.docx` |
 
 ## Visual Asset Checklist
 

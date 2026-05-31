@@ -1,6 +1,6 @@
 # Judging Demo Script
 
-A short, rehearsed walkthrough for pitching the Riyadh Mobility Intelligence Dashboard to hackathon judges.
+A short demo script for pitching the Riyadh Mobility Intelligence Dashboard to hackathon judges.
 
 Target: 5–7 minutes. No slides required.
 
