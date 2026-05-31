@@ -33,8 +33,8 @@ Requirements:
 Run locally:
 
 ```bash
-git clone <repo-url>
-cd riyadh-mobility-intelligence-dashboard
+git clone https://github.com/Esturban/microsoft-hackathon-riyadh-mobility.git
+cd microsoft-hackathon-riyadh-mobility
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
