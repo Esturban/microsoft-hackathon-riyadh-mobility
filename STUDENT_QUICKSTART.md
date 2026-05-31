@@ -34,14 +34,14 @@ Then open `http://127.0.0.1:8000`.
 
 ## How to modify one sample district
 
-Open [district_centers_sample.geojson](/Users/EVA/Desktop/eva/03_development/_dev/repos/00_apps/js-ts/riyadh_ud/app/static/sample-data/district_centers_sample.geojson) and change one district name or coordinates. Reload the app and pick that district from the dropdown.
+Open `app/static/sample-data/district_centers_sample.geojson` and change one district name or coordinates. Reload the app and pick that district from the dropdown.
 
 ## How to add a new route layer
 
-1. Add a new GeoJSON file under [app/static/sample-data](/Users/EVA/Desktop/eva/03_development/_dev/repos/00_apps/js-ts/riyadh_ud/app/static/sample-data).
-2. Add a backend loader in [app/data_access.py](/Users/EVA/Desktop/eva/03_development/_dev/repos/00_apps/js-ts/riyadh_ud/app/data_access.py).
-3. Add a frontend source and layer in [app/static/src/map.js](/Users/EVA/Desktop/eva/03_development/_dev/repos/00_apps/js-ts/riyadh_ud/app/static/src/map.js).
-4. Add a toggle in [app/static/index.html](/Users/EVA/Desktop/eva/03_development/_dev/repos/00_apps/js-ts/riyadh_ud/app/static/index.html).
+1. Add a new GeoJSON file under `app/static/sample-data/`.
+2. Add a backend loader in `app/data_access.py`.
+3. Add a frontend source and layer in `app/static/src/map.js`.
+4. Add a toggle in `app/static/index.html`.
 
 ## How to explain the project to judges
 
