@@ -30,3 +30,6 @@ package-lock.json
 
 # macOS
 .DS_Store
+
+# Session / agent context artifacts
+.context/

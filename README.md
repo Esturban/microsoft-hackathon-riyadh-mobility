@@ -4,6 +4,13 @@
 
 A beginner-friendly smart-city MVP for Riyadh hackathons. It shows metro and bus layers on a map, calculates a simple district accessibility score, and demonstrates how Azure Maps, Blob Storage, Cosmos DB, and Container Apps fit together.
 
+## Rebuild guide
+
+A polished walkthrough for reconstructing the app step by step is available here:
+
+- `docs/rebuild_guide.md`
+- `docs/rebuild_guide.docx`
+
 ## Architecture in 60 seconds
 
 `RCRC or sample files -> FastAPI -> API + static frontend -> Azure Maps dashboard -> optional Blob/Cosmos live data path`
@@ -36,10 +43,16 @@ Open `http://127.0.0.1:8000`.
 az login
 azd auth login
 azd init
-azd up
+bash scripts/deploy_azure.sh
 ```
 
 After deployment, copy the `WEB_APP_URL` from `azd` output and open it in your browser.
+
+To delete the current azd environment's resource group when you are done testing:
+
+```bash
+bash scripts/destroy_resource_group.sh --yes
+```
 
 ## Load real/sampled Riyadh data
 

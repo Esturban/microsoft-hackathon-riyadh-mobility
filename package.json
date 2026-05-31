@@ -8,6 +8,11 @@
     "test": "python3 -m pytest",
     "validate:data": "python3 scripts/validate_data.py",
     "fetch:data": "python3 scripts/fetch_rcrc_data.py",
-    "normalize:data": "python3 scripts/normalize_to_geojson.py"
+    "normalize:data": "python3 scripts/normalize_to_geojson.py",
+    "deploy:azure": "bash scripts/deploy_azure.sh",
+    "destroy:azure": "bash scripts/destroy_resource_group.sh"
+  },
+  "dependencies": {
+    "playwright": "^1.60.0"
   }
 }
