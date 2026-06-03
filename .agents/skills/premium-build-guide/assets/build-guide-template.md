@@ -1,42 +1,28 @@
-![](docs/assets/rebuild-guide/premium-cover-page.png)
+![](docs/assets/rebuild-guide/premium-cover-page.png){width=7.3in}
 
 \newpage
 
-![](docs/assets/rebuild-guide/premium-how-to-page.png)
+![](docs/assets/rebuild-guide/premium-how-to-page.png){width=7.3in}
 
 \newpage
 
-![](docs/assets/rebuild-guide/premium-executive-build-brief.png)
+![](docs/assets/rebuild-guide/premium-executive-build-brief.png){width=7.3in}
 
 \newpage
 
-# 1. What You Are Building
-
-State the product in one paragraph. Explain the user action, the data visible on screen, the backend/API role, and the intended demo outcome.
-
-Include:
-
-- what the app shows
-- who uses it
-- what decisions it supports
-- what is intentionally simple or replaceable
-- what makes it credible as a starter kit
-
-![Primary dashboard screenshot](docs/assets/rebuild-guide/local-dashboard-overview.png)
-
-*Figure: primary dashboard with the core workflow visible.*
+![](docs/assets/rebuild-guide/premium-product-story.png){width=7.3in}
 
 \newpage
 
-# 2. Challenge or Track Mapping
-
-Explain the primary track fit, strongest secondary fit, and extension routes. Keep this concise; use a designed track/adaptation plate for comparison.
-
-![](docs/assets/rebuild-guide/premium-services-tools-matrix.png)
+![](docs/assets/rebuild-guide/premium-track-mapping.png){width=7.3in}
 
 \newpage
 
-![](docs/assets/rebuild-guide/premium-architecture-blueprint.png)
+![](docs/assets/rebuild-guide/premium-services-tools-matrix.png){width=7.3in}
+
+\newpage
+
+![](docs/assets/rebuild-guide/premium-architecture-blueprint.png){width=7.3in}
 
 \newpage
 
@@ -72,7 +58,7 @@ Show where builders should edit first. Prefer a short repository map over a full
 
 \newpage
 
-![](docs/assets/rebuild-guide/premium-local-run-playbook.png)
+![](docs/assets/rebuild-guide/premium-local-run-playbook.png){width=7.3in}
 
 \newpage
 
@@ -94,15 +80,15 @@ python -m uvicorn app.main:app --reload
 
 ## Verification
 
-```bash
-curl -s http://127.0.0.1:8000/health
-curl -s http://127.0.0.1:8000/api/data-status | python -m json.tool
-python -m pytest
-```
+Use a designed verification plate when the checklist starts to create a half-empty page.
 
 \newpage
 
-![](docs/assets/rebuild-guide/premium-api-contracts.png)
+![](docs/assets/rebuild-guide/premium-local-verification.png){width=7.3in}
+
+\newpage
+
+![](docs/assets/rebuild-guide/premium-api-contracts.png){width=7.3in}
 
 \newpage
 
@@ -118,7 +104,7 @@ Explain page boot, map layers, controls, score panel, and visible success signal
 
 \newpage
 
-![](docs/assets/rebuild-guide/premium-cloud-deployment-blueprint.png)
+![](docs/assets/rebuild-guide/premium-cloud-deployment-blueprint.png){width=7.3in}
 
 \newpage
 
@@ -128,7 +114,7 @@ List prerequisites, deployment commands, resources created, smoke tests, optiona
 
 \newpage
 
-![](docs/assets/rebuild-guide/premium-track-adaptation-routes.png)
+![](docs/assets/rebuild-guide/premium-track-adaptation-routes.png){width=7.3in}
 
 \newpage
 

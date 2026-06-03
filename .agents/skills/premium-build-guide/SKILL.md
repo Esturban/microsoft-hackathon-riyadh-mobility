@@ -27,13 +27,26 @@ Use the bundled plate generator for fast report pages:
 python .agents/skills/premium-build-guide/scripts/generate_report_plate.py path/to/plate-spec.json --out docs/assets/rebuild-guide
 ```
 
+Render final artifacts with the bundled renderer so `\newpage` markers become real Word page breaks:
+
+```bash
+python .agents/skills/premium-build-guide/scripts/render_markdown_report.py docs/rebuild_guide.md --docx docs/rebuild_guide.docx --pdf docs/rebuild_guide.pdf --reference-doc docs/rebuild_guide.docx --pages-dir /tmp/guide-pages
+```
+
 Start new guides from the bundled template:
 
 ```bash
 cp .agents/skills/premium-build-guide/assets/build-guide-template.md docs/rebuild_guide.md
 ```
 
-Use the JSON specs in `assets/plate-specs/` as starting points for service matrices, API contracts, and track/adaptation routes.
+Use the JSON specs in `assets/plate-specs/` as starting points for product story, track mapping, service matrices, local verification, API contracts, and track/adaptation routes.
+
+If a reusable agent is useful, copy the tracked template instead of relying on an ignored local `.codex/` file:
+
+```bash
+mkdir -p .codex/agents
+cp .agents/skills/premium-build-guide/assets/agent-templates/build-guide-designer.toml .codex/agents/build-guide-designer.toml
+```
 
 If the guide needs custom layouts, copy or adapt the script instead of hand-writing one-off Pillow code in the shell.
 

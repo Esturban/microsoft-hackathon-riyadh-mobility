@@ -1,63 +1,28 @@
-![](docs/assets/rebuild-guide/premium-cover-page.png)
+![](docs/assets/rebuild-guide/premium-cover-page.png){width=7.3in}
 
 \newpage
 
-![](docs/assets/rebuild-guide/premium-how-to-page.png)
+![](docs/assets/rebuild-guide/premium-how-to-page.png){width=7.3in}
 
 \newpage
 
-![](docs/assets/rebuild-guide/premium-executive-build-brief.png)
+![](docs/assets/rebuild-guide/premium-executive-build-brief.png){width=7.3in}
 
 \newpage
 
-# 1. What You Are Building
-
-The application is a **Mobility Intelligence Starter Kit** for Riyadh. It lets a builder open a map, view public transport layers, select a district, and receive a transparent mobility access score. The same scaffold can later support district intelligence, sustainability overlays, culture routes, or other urban challenge ideas.
-
-The starter kit includes:
-
-- Riyadh metro lines and bus routes on a browser map.
-- District selection and district-level mobility scoring.
-- Mock live mobility events such as delay or congestion markers.
-- Fallback-aware data loading that works without Azure credentials.
-- Optional Azure-backed deployment using Azure Maps, Blob Storage, Cosmos DB, Container Apps, and Application Insights.
-- A reusable pattern for teams that want to replace the data and scoring logic with another urban intelligence use case.
-
-The product story is intentionally simple:
-
-> If a user selects a Riyadh district, can the app show nearby mobility infrastructure, explain route coverage, and turn that into a clear starter score?
-
-The current score is a teachable proxy:
-
-```text
-score = (nearby metro count x 3) + nearby bus count - live delay penalty
-```
-
-This formula is not the final planning answer. It is a clear starting point for showing how data, scoring, API design, map layers, and Azure services connect.
-
-![Local dashboard screenshot](docs/assets/rebuild-guide/local-dashboard-overview.png)
-
-*Figure: local dashboard running from bundled sample data with metro lines, bus routes, district selector, score panel, and Azure service explainer visible.*
+![](docs/assets/rebuild-guide/premium-product-story.png){width=7.3in}
 
 \newpage
 
-# 2. Urban Challenge Track Mapping
-
-The strongest primary fit is **Transformational Technology** because the current app already focuses on mobility visibility, route overlays, and cloud-backed intelligence. The strongest secondary fit is **Prosperous People** because the district scoring pattern can become a 15-minute city, walkability, or service-access score.
-
-Sustainable Solutions and Culture should be treated as extension routes after the core app works.
-
-Builder pitch:
-
-```text
-Build a Riyadh mobility intelligence prototype with public route data, district scoring, Azure Maps, and an Azure-backed live path. Use it directly for Transformational Technology, or extend the same scaffold into Prosperous People, Sustainable Solutions, or Culture use cases.
-```
-
-![](docs/assets/rebuild-guide/premium-services-tools-matrix.png)
+![](docs/assets/rebuild-guide/premium-track-mapping.png){width=7.3in}
 
 \newpage
 
-![](docs/assets/rebuild-guide/premium-architecture-blueprint.png)
+![](docs/assets/rebuild-guide/premium-services-tools-matrix.png){width=7.3in}
+
+\newpage
+
+![](docs/assets/rebuild-guide/premium-architecture-blueprint.png){width=7.3in}
 
 \newpage
 
@@ -148,7 +113,7 @@ PYTHONPATH=. python3 scripts/seed_cosmos.py    # optional cloud step
 
 \newpage
 
-![](docs/assets/rebuild-guide/premium-local-run-playbook.png)
+![](docs/assets/rebuild-guide/premium-local-run-playbook.png){width=7.3in}
 
 \newpage
 
@@ -191,26 +156,13 @@ The first page load can take time. Wait for the district selector, layer control
 
 *Figure: metro and bus layers rendered locally with OpenStreetMap fallback tiles.*
 
-## Local Verification Checklist
+\newpage
 
-- Dashboard loads at `http://127.0.0.1:8000`.
-- Map renders using Azure Maps or the OpenStreetMap fallback.
-- Metro and bus layers appear.
-- District selector has 10 Riyadh districts.
-- Selecting a district updates the score panel.
-- `/health` returns `{"status":"ok"}`.
-- `/api/data-status` reports active sample mode.
+![](docs/assets/rebuild-guide/premium-local-verification.png){width=7.3in}
 
-Useful checks:
+\newpage
 
-```bash
-curl -s http://127.0.0.1:8000/health
-curl -s http://127.0.0.1:8000/api/data-status | python -m json.tool
-python -m pytest
-python scripts/validate_data.py
-```
-
-![](docs/assets/rebuild-guide/premium-api-contracts.png)
+![](docs/assets/rebuild-guide/premium-api-contracts.png){width=7.3in}
 
 \newpage
 
@@ -288,7 +240,7 @@ The score panel translates raw counts into a judge-friendly story:
 
 *Figure: district score panel after selecting a Riyadh district.*
 
-![](docs/assets/rebuild-guide/premium-cloud-deployment-blueprint.png)
+![](docs/assets/rebuild-guide/premium-cloud-deployment-blueprint.png){width=7.3in}
 
 \newpage
 
@@ -369,7 +321,7 @@ The teardown script deletes the current Azure resource group and intentionally r
 
 \newpage
 
-![](docs/assets/rebuild-guide/premium-track-adaptation-routes.png)
+![](docs/assets/rebuild-guide/premium-track-adaptation-routes.png){width=7.3in}
 
 \newpage
 

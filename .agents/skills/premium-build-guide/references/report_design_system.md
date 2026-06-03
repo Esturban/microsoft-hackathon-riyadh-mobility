@@ -71,6 +71,33 @@ Show:
 
 End with the rule: Azure should enhance the app, not be required for first success.
 
+### Product Story Plate
+
+Use when the "what you are building" section looks like a plain README page or leaves a large blank area. The plate should make the starter-kit thesis visible without requiring a long paragraph.
+
+Show:
+
+- The core user experience.
+- The starter-kit principle.
+- The judge-facing proof.
+- The build question or domain thesis.
+
+Prefer this plate over a large screenshot plus duplicated explanatory prose.
+
+### Track Mapping Plate
+
+Use when a challenge/track section is mostly positioning text and would otherwise create a half-empty page.
+
+Show:
+
+- Primary track fit.
+- Strong secondary fit.
+- Extension paths.
+- Azure emphasis.
+- A positioning rule that prevents overclaiming.
+
+Keep the later adaptation routes page if it adds concrete "keep / replace / add / services" guidance.
+
 ### Local Run Playbook
 
 Use a command ladder:
@@ -83,6 +110,18 @@ Use a command ladder:
 - Verify.
 
 Each step needs a command and an expected signal. Include the slow-load warning as a highlighted card.
+
+### Local Verification Plate
+
+Use when the local checklist creates a mostly blank page before the backend or API section.
+
+Group checks by:
+
+- UI readiness.
+- API checks.
+- Builder commands.
+
+The plate should preserve the slow-load warning and the concrete success signal: dashboard visible, overlays present, selector populated, score panel updating, `/health` OK, and `/api/data-status` explaining active data source.
 
 ### API Contract Plate
 
