@@ -1,47 +1,8 @@
----
-title: "Riyadh Mobility Intelligence Starter Kit"
-subtitle: "Build and Deployment Workbook"
-author: "Prepared for atomcamp Arabia and the Riyadh Urban Development Hackathon in collaboration with Microsoft"
-date: "2026-06-03"
-lang: "en-US"
----
-
-# Riyadh Mobility Intelligence Starter Kit
-
-## Build and Deployment Workbook
-
-This working document helps August hackathon teams rebuild, run, adapt, and deploy the Riyadh Mobility Intelligence starter kit for Riyadh urban development use cases.
-
-**Repository:** [github.com/Esturban/microsoft-hackathon-riyadh-mobility](https://github.com/Esturban/microsoft-hackathon-riyadh-mobility)  
-**Local app:** [http://127.0.0.1:8000](http://127.0.0.1:8000)  
-**Deployed app:** Paste `WEB_APP_URL` from `azd up` output here  
-**Resource index:** see the appendix for Azure, deployment, and project references.
-
-**Program context:** atomcamp Arabia, Microsoft collaboration, Riyadh Urban Development Hackathon, August builder workbook.
-
-![](docs/assets/rebuild-guide/cover-workbook-snapshot.png)
+![](docs/assets/rebuild-guide/premium-cover-page.png)
 
 \newpage
 
-# How to Use This Guide
-
-This is a build workbook for hackathon builders, mentors, reviewers, and teams adapting the scaffold during the August hackathon. It is not a formal transport model or a production planning system. It is a practical starter kit that shows how open mobility data, a simple scoring API, map layers, and Azure services can fit together in a credible prototype.
-
-Use the guide in this order:
-
-1. Understand what the starter kit is building.
-2. Run the app locally with bundled sample data.
-3. Inspect the API and data-status endpoints.
-4. Select a district and review the scoring panel.
-5. Understand the backend, frontend, and data fallback chain.
-6. Deploy the same app shape to Azure when ready.
-7. Adapt the scaffold for a Riyadh Urban Intelligence Lab track.
-
-The fastest successful path is local-first. Get the dashboard working from sample data before adding cloud credentials, Blob Storage, Cosmos DB, or a deployed app URL.
-
-![App layers](docs/assets/rebuild-guide/icon-row-app-layers.png)
-
-*Figure: the starter kit is easiest to explain as five layers: backend, data, map, scoring, and cloud-live deployment.*
+![](docs/assets/rebuild-guide/premium-how-to-page.png)
 
 \newpage
 
