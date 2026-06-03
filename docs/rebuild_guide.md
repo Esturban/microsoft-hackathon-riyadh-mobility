@@ -17,7 +17,9 @@ This working document helps August hackathon teams rebuild, run, adapt, and depl
 **Deployed app:** Paste `WEB_APP_URL` from `azd up` output here  
 **Resource index:** see the appendix for Azure, deployment, and project references.
 
-**Partner/program mark row:** add approved atomcamp Arabia, Microsoft, Riyadh Urban Intelligence Lab, and strategic partner logos here when final brand assets are available.
+**Program context:** atomcamp Arabia, Microsoft collaboration, Riyadh Urban Development Hackathon, August builder workbook.
+
+![](docs/assets/rebuild-guide/cover-workbook-snapshot.png)
 
 \newpage
 
