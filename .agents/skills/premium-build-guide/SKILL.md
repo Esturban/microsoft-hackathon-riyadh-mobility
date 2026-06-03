@@ -27,6 +27,14 @@ Use the bundled plate generator for fast report pages:
 python .agents/skills/premium-build-guide/scripts/generate_report_plate.py path/to/plate-spec.json --out docs/assets/rebuild-guide
 ```
 
+Start new guides from the bundled template:
+
+```bash
+cp .agents/skills/premium-build-guide/assets/build-guide-template.md docs/rebuild_guide.md
+```
+
+Use the JSON specs in `assets/plate-specs/` as starting points for service matrices, API contracts, and track/adaptation routes.
+
 If the guide needs custom layouts, copy or adapt the script instead of hand-writing one-off Pillow code in the shell.
 
 ## Page Strategy

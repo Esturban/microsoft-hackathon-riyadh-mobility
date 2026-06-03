@@ -84,6 +84,19 @@ Use a command ladder:
 
 Each step needs a command and an expected signal. Include the slow-load warning as a highlighted card.
 
+### API Contract Plate
+
+Use when the backend endpoint table starts to dominate the page.
+
+Group endpoints by journey:
+
+- Bootstrap.
+- Map layers.
+- District scoring.
+- Diagnostics.
+
+Each group should include endpoint paths, the purpose, and what a builder or judge should look for. Keep the detailed endpoint table only if the guide is primarily an API reference.
+
 ### Cloud Deployment Blueprint
 
 Show:

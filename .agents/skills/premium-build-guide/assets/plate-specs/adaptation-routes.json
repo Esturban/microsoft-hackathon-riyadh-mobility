@@ -1,0 +1,19 @@
+{
+  "filename": "premium-track-adaptation-routes.png",
+  "brand": "Build Guide",
+  "label": "TRACK STRATEGY",
+  "title": "Track Adaptation Routes",
+  "kicker": "Keep the proven shell. Replace the domain data, score logic, explanations, and cloud services to make the track-specific intelligence obvious.",
+  "sections": [
+    {
+      "title": "Primary routes",
+      "color": "#007CBE",
+      "cards": [
+        {"title": "Technology", "body": "Reuse layers, events, selectors, and KPIs. Add live status or simulation.", "meta": "primary"},
+        {"title": "People", "body": "Reuse district scoring. Add service-access and equity layers.", "meta": "secondary"},
+        {"title": "Sustainability", "body": "Reuse map and buffer logic. Add AQI, heat, emissions, or clean corridors.", "meta": "extension"}
+      ]
+    }
+  ],
+  "callout": "Winning pattern: preserve the local-first API, map shell, fallback chain, and deployment path."
+}

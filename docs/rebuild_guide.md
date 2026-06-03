@@ -210,21 +210,20 @@ python -m pytest
 python scripts/validate_data.py
 ```
 
+![](docs/assets/rebuild-guide/premium-api-contracts.png)
+
+\newpage
+
 # 6. Backend Walkthrough
 
 The backend is a small FastAPI application. It serves both the API and the static frontend so the starter kit stays easy to run and easy to deploy.
 
-| Endpoint | Purpose | What a builder should look for |
-|---|---|---|
-| `GET /health` | Confirms the app is alive | `{"status":"ok"}` |
-| `GET /api/config` | Sends runtime settings to the frontend | app name, map mode, access buffer, data mode |
-| `GET /api/routes` | Returns route summaries and KPI counts | metro and bus route counts |
-| `GET /api/routes/geojson?mode=metro` | Returns map-ready metro geometry | GeoJSON payload and source |
-| `GET /api/routes/geojson?mode=bus` | Returns map-ready bus geometry | GeoJSON payload and source |
-| `GET /api/districts` | Returns district selector records | 10 district items in sample mode |
-| `GET /api/score?districtId=...` | Returns score and score components | score, rating, metro count, bus count, penalty |
-| `GET /api/live-events` | Returns mock or configured event overlays | delay/event items and source |
-| `GET /api/data-status` | Explains active data source and fallback status | current mode, counts, fallback message |
+Read the API as four small contracts:
+
+- **Bootstrap:** `/health` and `/api/config` confirm app health and runtime settings.
+- **Map layers:** `/api/routes` and `/api/routes/geojson?mode=...` return route counts and map-ready geometry.
+- **District scoring:** `/api/districts` and `/api/score?districtId=...` drive the selector and score panel.
+- **Diagnostics:** `/api/live-events` and `/api/data-status` explain demo events, active data mode, and fallback behavior.
 
 ![API data status screenshot](docs/assets/rebuild-guide/api-data-status.png)
 
