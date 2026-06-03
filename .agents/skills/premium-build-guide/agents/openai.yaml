@@ -1,4 +1,0 @@
-interface:
-  display_name: "Premium Build Guide"
-  short_description: "Design polished DOCX/PDF build guides"
-  default_prompt: "Use $premium-build-guide to turn a technical build guide into a polished report-style DOCX/PDF with reusable design assets."
