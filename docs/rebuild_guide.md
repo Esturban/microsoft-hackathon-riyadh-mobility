@@ -6,6 +6,10 @@
 
 \newpage
 
+![](docs/assets/rebuild-guide/premium-executive-build-brief.png)
+
+\newpage
+
 # 1. What You Are Building
 
 The application is a **Mobility Intelligence Starter Kit** for Riyadh. It lets a builder open a map, view public transport layers, select a district, and receive a transparent mobility access score. The same scaffold can later support district intelligence, sustainability overlays, culture routes, or other urban challenge ideas.
@@ -43,42 +47,21 @@ The strongest primary fit is **Transformational Technology** because the current
 
 Sustainable Solutions and Culture should be treated as extension routes after the core app works.
 
-![Urban challenge routes](docs/assets/rebuild-guide/icon-row-tracks.png)
-
-| Track | How this starter kit fits | What to add next | Likely Azure services |
-|---|---|---|---|
-| Transformational Technology | Mobility command view, route overlays, delay markers, congestion proxy | parking demand, live route status, peak-load simulation | Container Apps, Azure Maps, Event Hubs, Stream Analytics, App Insights |
-| Prosperous People | District access score, walkability proxy, 15-minute city thinking | service access layers, district comparison, equity indicators | Azure Maps, Cosmos DB, Blob Storage, Azure OpenAI for explanations |
-| Sustainable Solutions | Mobility plus AQI, heat, emissions, and clean corridors | AQI stations, heat-stress routing, emissions overlay | Azure Maps, Blob Storage, Cosmos DB, Power BI |
-| Culture | Visitor movement, event-day access, heritage route planning | heritage markers, crowd-sensitive routes, multilingual notes | Azure Maps, Cosmos DB, App Insights, optional translation services |
-
 Builder pitch:
 
 ```text
 Build a Riyadh mobility intelligence prototype with public route data, district scoring, Azure Maps, and an Azure-backed live path. Use it directly for Transformational Technology, or extend the same scaffold into Prosperous People, Sustainable Solutions, or Culture use cases.
 ```
 
-# 3. Services and Tools Map
-
-This project is easiest to understand when each service or tool has one clear job.
-
-| Service or tool | Role in this starter kit | Where builders see it |
-|---|---|---|
-| FastAPI | Serves backend API endpoints and the static frontend from one Python app | `app/main.py`, `app/routes.py` |
-| Vanilla JavaScript | Coordinates page boot, map rendering, toggles, panels, and API calls | `app/static/src/` |
-| Azure Maps | Provides the cloud map SDK and map services when configured | `AZURE_MAPS_KEY`, `app/static/src/map.js` |
-| Azure Blob Storage | Stores processed GeoJSON/JSON files for cloud-backed data mode | `scripts/upload_to_blob.py`, `app/data_access.py` |
-| Azure Cosmos DB | Stores app-shaped route, district, and live-event records | `scripts/seed_cosmos.py`, `app/data_access.py` |
-| Azure Container Apps | Hosts the FastAPI app and frontend container | `azure.yaml`, `infra/main.bicep` |
-| Azure Container Registry | Stores the built container image used by Container Apps | Bicep modules under `infra/modules/` |
-| Application Insights | Tracks requests, failures, latency, and health for the deployed app | Azure portal after deploy |
-| Log Analytics | Stores logs and diagnostics for Azure resources | Azure portal after deploy |
-| Bicep | Defines infrastructure-as-code for the Azure environment | `infra/main.bicep`, `infra/modules/` |
-| Azure Developer CLI | Creates and deploys the app environment with `azd up` | `azure.yaml`, `bash scripts/deploy_azure.sh` |
+![](docs/assets/rebuild-guide/premium-services-tools-matrix.png)
 
 \newpage
 
-# 4. Architecture and Build Path
+![](docs/assets/rebuild-guide/premium-architecture-blueprint.png)
+
+\newpage
+
+# 3. Architecture and Build Path
 
 The app is designed to work locally first, then graduate into an Azure-backed live path. The core principle is simple: **the app must remain useful even when Azure credentials, remote services, or live data are unavailable.**
 
@@ -106,7 +89,7 @@ The app should not fail just because cloud data is missing. Data access is inten
 
 In practice, builders should start with `DATA_MODE=sample`, then move to Blob or Cosmos only after the local app is working.
 
-# 5. Project Structure
+# 4. Project Structure
 
 Start with the app shell, API, frontend, sample data, deployment files, and tests.
 
@@ -165,7 +148,11 @@ PYTHONPATH=. python3 scripts/seed_cosmos.py    # optional cloud step
 
 \newpage
 
-# 6. Run Locally
+![](docs/assets/rebuild-guide/premium-local-run-playbook.png)
+
+\newpage
+
+# 5. Run Locally
 
 Local setup is deliberately direct. The goal is to get one useful screen running before adding cloud services.
 
@@ -223,7 +210,7 @@ python -m pytest
 python scripts/validate_data.py
 ```
 
-# 7. Backend Walkthrough
+# 6. Backend Walkthrough
 
 The backend is a small FastAPI application. It serves both the API and the static frontend so the starter kit stays easy to run and easy to deploy.
 
@@ -257,7 +244,7 @@ Keep this formula easy to explain. Teams can later replace the weights or add ne
 
 \newpage
 
-# 8. Frontend Walkthrough
+# 7. Frontend Walkthrough
 
 The frontend is a single-page application built with Vanilla JavaScript. This keeps the starter kit accessible to mixed-experience teams while still showing a complete app workflow.
 
@@ -302,7 +289,11 @@ The score panel translates raw counts into a judge-friendly story:
 
 *Figure: district score panel after selecting a Riyadh district.*
 
-# 9. Cloud-Live Deployment
+![](docs/assets/rebuild-guide/premium-cloud-deployment-blueprint.png)
+
+\newpage
+
+# 8. Cloud-Live Deployment
 
 The cloud-live path is the deployable version of the same starter kit. It is useful when a team needs to show that the app can move beyond a laptop and into a credible Azure environment.
 
@@ -379,7 +370,11 @@ The teardown script deletes the current Azure resource group and intentionally r
 
 \newpage
 
-# 10. Starter Kit Adaptation Routes
+![](docs/assets/rebuild-guide/premium-track-adaptation-routes.png)
+
+\newpage
+
+# 9. Starter Kit Adaptation Routes
 
 Treat this codebase as a scaffold. Teams should keep the working shell, replace the domain data, and adapt the score or map layers toward the track they are pursuing.
 
@@ -465,7 +460,7 @@ Replace or add:
 
 Likely Azure services: Azure Maps, Cosmos DB, Blob Storage, Container Apps, optional translation services.
 
-# 11. Demo Flow
+# 10. Demo Flow
 
 Use this short flow when presenting to mentors or judges.
 
