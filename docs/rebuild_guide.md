@@ -1,172 +1,151 @@
 ---
 title: "Riyadh Mobility Intelligence Starter Kit"
-subtitle: "Build Guide for the Riyadh Urban Intelligence Lab"
+subtitle: "Build and Deployment Guide"
 author: "Prepared for atomcamp Arabia and the Riyadh Urban Development Hackathon in collaboration with Microsoft"
-date: "2026-05-30"
+date: "2026-06-03"
 lang: "en-US"
 ---
 
 # Riyadh Mobility Intelligence Starter Kit
 
-## Build Guide for the Riyadh Urban Intelligence Lab
+## Build and Deployment Guide
 
-For atomcamp Arabia and the Riyadh Urban Development Hackathon in collaboration with Microsoft.
+This guide helps hackathon teams rebuild, run, adapt, and deploy the Riyadh Mobility Intelligence starter kit for urban intelligence use cases.
 
-Understand the app, run it locally, and adapt it for another use case.
+**Repository:** [github.com/Esturban/microsoft-hackathon-riyadh-mobility](https://github.com/Esturban/microsoft-hackathon-riyadh-mobility)  
+**Local app:** [http://127.0.0.1:8000](http://127.0.0.1:8000)  
+**Deployed app:** Paste `WEB_APP_URL` from `azd up` output here  
+**Program links:** [atomcamp Arabia](https://atomcamparabia.com/) | [Azure Developer CLI](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/) | [Azure Maps](https://learn.microsoft.com/en-us/azure/azure-maps/)
 
-Focus on the working path first: local app, data flow, map layers, score panel, Azure deployment, and safe extension routes.
+**Partner/program mark row:** add approved atomcamp Arabia, Microsoft, Riyadh Urban Intelligence Lab, and strategic partner logos here when final brand assets are available.
 
-## Before You Start
+\newpage
 
-Use these steps to understand the app quickly, run it locally, explain it, and adapt it into an MVP.
+# How to Use This Guide
 
-By the end, you can:
+This is a build workbook for hackathon builders, mentors, reviewers, and teams adapting the scaffold. It is not a formal transport model or a production planning system. It is a practical starter kit that shows how open mobility data, a simple scoring API, map layers, and Azure services can fit together in a credible prototype.
 
-- run the starter kit locally with bundled sample data
-- explain the app as a mobility intelligence scaffold, not only a dashboard
-- identify how FastAPI, Vanilla JavaScript, Azure Maps, Blob Storage, Cosmos DB, and Container Apps fit together
-- connect the app to a cloud-live Azure path when ready
-- adapt the scaffold for another Riyadh Urban Intelligence Lab track
-- prepare a short judge-facing demo
+Use the guide in this order:
 
-What you need before starting:
+1. Understand what the starter kit is building.
+2. Run the app locally with bundled sample data.
+3. Inspect the API and data-status endpoints.
+4. Select a district and review the scoring panel.
+5. Understand the backend, frontend, and data fallback chain.
+6. Deploy the same app shape to Azure when ready.
+7. Adapt the scaffold for a Riyadh Urban Intelligence Lab track.
 
-- Python 3.11 or newer
-- Git and a code editor
-- terminal access
-- optional Azure account for the cloud-live path
-- optional Azure CLI and Azure Developer CLI for deployment
+The fastest successful path is local-first. Get the dashboard working from sample data before adding cloud credentials, Blob Storage, Cosmos DB, or a deployed app URL.
 
-Open these when needed:
+![App layers](docs/assets/rebuild-guide/icon-row-app-layers.png)
 
-| Open | When you need |
-|---|---|
-| `README.md` | student quickstart, local run, deploy, demo flow, and troubleshooting |
-| `docs/README.md` | docs index |
-| `docs/rebuild_guide.md` | Markdown build guide |
-| `docs/rebuild_guide.docx` | printable build guide |
+*Figure: the starter kit is easiest to explain as five layers: backend, data, map, scoring, and cloud-live deployment.*
 
-[Icon placement: partner/program row]  
-Add approved atomcamp Arabia, Microsoft, Riyadh Urban Intelligence Lab, and strategic partner marks here if brand assets are available.
+\newpage
 
-# Section 0 — What You’re Building
+# 1. What You Are Building
 
-This application is a **Mobility Intelligence Starter Kit** for Riyadh. It helps teams explore public transport access, route visibility, district scoring, and cloud-live data architecture through one approachable web app.
+The application is a **Mobility Intelligence Starter Kit** for Riyadh. It lets a builder open a map, view public transport layers, select a district, and receive a transparent mobility access score. The same scaffold can later support district intelligence, sustainability overlays, culture routes, or other urban challenge ideas.
 
-The starter kit shows:
+The starter kit includes:
 
-- Riyadh metro lines and bus routes on a map
-- district selection and district-level mobility scoring
-- route and event overlays
-- a fallback-aware data path using bundled sample files
-- an Azure-backed live layer for deployment and data services
-- a pattern that can be reused for other hackathon tracks
+- Riyadh metro lines and bus routes on a browser map.
+- District selection and district-level mobility scoring.
+- Mock live mobility events such as delay or congestion markers.
+- Fallback-aware data loading that works without Azure credentials.
+- Optional Azure-backed deployment using Azure Maps, Blob Storage, Cosmos DB, Container Apps, and Application Insights.
+- A reusable pattern for teams that want to replace the data and scoring logic with another urban intelligence use case.
 
-Use this app as a mobility dashboard first, then reuse the same structure for other urban intelligence projects.
+The product story is intentionally simple:
 
-## Product Story
+> If a user selects a Riyadh district, can the app show nearby mobility infrastructure, explain route coverage, and turn that into a clear starter score?
 
-The app answers a simple question:
-
-> If a user selects a district in Riyadh, can we show nearby mobility infrastructure, explain the available route coverage, and turn that into a clear starter score?
-
-The current score uses this simple formula:
+The current score is a teachable proxy:
 
 ```text
 score = (nearby metro count x 3) + nearby bus count - live delay penalty
 ```
 
-This is a simplified model for learning how the data, scoring, APIs, map layers, and Azure services fit together.
+This formula is not the final planning answer. It is a clear starting point for showing how data, scoring, API design, map layers, and Azure services connect.
 
-## Services at a Glance
+![Local dashboard screenshot](docs/assets/rebuild-guide/local-dashboard-overview.png)
 
-| Layer | What it does | Main files or services |
+*Figure: local dashboard running from bundled sample data with metro lines, bus routes, district selector, score panel, and Azure service explainer visible.*
+
+\newpage
+
+# 2. Urban Challenge Track Mapping
+
+The strongest primary fit is **Transformational Technology** because the current app already focuses on mobility visibility, route overlays, and cloud-backed intelligence. The strongest secondary fit is **Prosperous People** because the district scoring pattern can become a 15-minute city, walkability, or service-access score.
+
+Sustainable Solutions and Culture should be treated as extension routes after the core app works.
+
+![Urban challenge routes](docs/assets/rebuild-guide/icon-row-tracks.png)
+
+| Track | How this starter kit fits | What to add next | Likely Azure services |
+|---|---|---|---|
+| Transformational Technology | Mobility command view, route overlays, delay markers, congestion proxy | parking demand, live route status, peak-load simulation | Container Apps, Azure Maps, Event Hubs, Stream Analytics, App Insights |
+| Prosperous People | District access score, walkability proxy, 15-minute city thinking | service access layers, district comparison, equity indicators | Azure Maps, Cosmos DB, Blob Storage, Azure OpenAI for explanations |
+| Sustainable Solutions | Mobility plus AQI, heat, emissions, and clean corridors | AQI stations, heat-stress routing, emissions overlay | Azure Maps, Blob Storage, Cosmos DB, Power BI |
+| Culture | Visitor movement, event-day access, heritage route planning | heritage markers, crowd-sensitive routes, multilingual notes | Azure Maps, Cosmos DB, App Insights, optional translation services |
+
+Builder pitch:
+
+```text
+Build a Riyadh mobility intelligence prototype with public route data, district scoring, Azure Maps, and an Azure-backed live path. Use it directly for Transformational Technology, or extend the same scaffold into Prosperous People, Sustainable Solutions, or Culture use cases.
+```
+
+# 3. Services and Tools Map
+
+This project is easiest to understand when each service or tool has one clear job.
+
+| Service or tool | Role in this starter kit | Where builders see it |
 |---|---|---|
-| Web app | Serves the API and frontend | FastAPI, `app/main.py`, `app/routes.py` |
-| Frontend | Shows the map, panels, toggles, and score | Vanilla JavaScript under `app/static/src/` |
-| Map layer | Displays Riyadh mobility layers | Azure Maps with local fallback |
-| Data layer | Loads sample, Blob, or Cosmos-backed data | `app/data_access.py`, sample GeoJSON/JSON |
-| Scoring layer | Calculates district mobility score | `app/scoring.py` |
-| Cloud-live layer | Hosts and observes the deployed app | Container Apps, Blob Storage, Cosmos DB, App Insights |
+| FastAPI | Serves backend API endpoints and the static frontend from one Python app | `app/main.py`, `app/routes.py` |
+| Vanilla JavaScript | Coordinates page boot, map rendering, toggles, panels, and API calls | `app/static/src/` |
+| Azure Maps | Provides the cloud map SDK and map services when configured | `AZURE_MAPS_KEY`, `app/static/src/map.js` |
+| Azure Blob Storage | Stores processed GeoJSON/JSON files for cloud-backed data mode | `scripts/upload_to_blob.py`, `app/data_access.py` |
+| Azure Cosmos DB | Stores app-shaped route, district, and live-event records | `scripts/seed_cosmos.py`, `app/data_access.py` |
+| Azure Container Apps | Hosts the FastAPI app and frontend container | `azure.yaml`, `infra/main.bicep` |
+| Azure Container Registry | Stores the built container image used by Container Apps | Bicep modules under `infra/modules/` |
+| Application Insights | Tracks requests, failures, latency, and health for the deployed app | Azure portal after deploy |
+| Log Analytics | Stores logs and diagnostics for Azure resources | Azure portal after deploy |
+| Bicep | Defines infrastructure-as-code for the Azure environment | `infra/main.bicep`, `infra/modules/` |
+| Azure Developer CLI | Creates and deploys the app environment with `azd up` | `azure.yaml`, `bash scripts/deploy_azure.sh` |
 
-Show the browser view with the map centered on Riyadh, metro and bus layers available, district selector visible, and the scoring panel open.
+\newpage
 
-[Screenshot placeholder: dashboard loaded locally]  
+# 4. Architecture and Build Path
 
-# Section 1 — Hackathon Track Fit
+The app is designed to work locally first, then graduate into an Azure-backed live path. The core principle is simple: **the app must remain useful even when Azure credentials, remote services, or live data are unavailable.**
 
-Map the starter kit to the four Riyadh Urban Intelligence Lab tracks. Start with mobility, then extend the same scaffold into people, sustainability, or culture use cases.
+## Local-First Workflow
 
-## Track Mapping
+Local mode is the first build milestone. It should work on a builder laptop with no Azure account configured.
 
-| Hackathon track | How this starter kit fits | Builder route |
-|---|---|---|
-| Transformational Technology | Mobility dashboard, route overlays, congestion proxy, parking or delay extensions | turn the map into a live mobility command view |
-| Prosperous People | 15-minute city thinking, access scoring, district intelligence, walkability proxy | extend district scoring into service access and walkability |
-| Sustainable Solutions | mobility and pollution overlay, heat-stress routing, clean corridor recommendations | combine route data with AQI, heat, or emissions layers |
-| Culture | visitor movement, crowd routing, heritage access, event mobility planning | adapt the map for cultural routes and visitor experience |
+![Local-first workflow](docs/assets/rebuild-guide/diagram-local-first.png)
 
-## Best Primary Fit
+Local mode uses the same UI and API shape that the cloud deployment uses. The difference is the data source: bundled sample files replace cloud-backed records.
 
-The strongest primary fit is **Transformational Technology** because the app already focuses on public transport visibility, route layers, and mobility intelligence.
+## Azure-Backed Workflow
 
-The strongest secondary fit is **Prosperous People** because the district scoring pattern can become a 15-minute city or walkability-access score.
+When deployed, the same containerized app runs in Azure Container Apps and can connect to Azure services for maps, storage, records, and monitoring.
 
-Sustainable Solutions and Culture are extension routes. They are not the first build path, but the same scaffold can support them once the core mobility app works.
+![Azure-backed workflow](docs/assets/rebuild-guide/diagram-azure-backed.png)
 
-## Track-Aligned Pitch
+Use this path when the team is ready to show a credible cloud deployment or run post-deploy smoke tests.
 
-Use this summary when presenting the app:
+## Data Fallback Chain
 
-```text
-Build a Riyadh mobility intelligence prototype with public route data, district scoring, Azure Maps, and an Azure-backed live layer. Use it directly for Transformational Technology, or extend it into Prosperous People, Sustainable Solutions, or Culture use cases.
-```
+The app should not fail just because cloud data is missing. Data access is intentionally fallback-aware.
 
-Add one small icon for each track: mobility/technology, people/districts, sustainability/environment, culture/visitor experience.
+![Data fallback chain](docs/assets/rebuild-guide/diagram-data-fallback.png)
 
-[Icon placement: four hackathon tracks]  
+In practice, builders should start with `DATA_MODE=sample`, then move to Blob or Cosmos only after the local app is working.
 
-# Section 2 — Architecture at a Glance
+# 5. Project Structure
 
-The app is designed to work locally first and then graduate into a cloud-live Azure path.
-
-## Local-First Path
-
-Local mode is the first build milestone. It should work even when the builder has no Azure credentials.
-
-```text
-Browser
-  -> FastAPI on localhost
-    -> static frontend
-    -> bundled sample GeoJSON and JSON
-    -> scoring logic
-```
-
-Key design principle: the app should always be explainable from local sample data. If cloud services are unavailable, the product story should still work.
-
-## Azure-Backed Live Path
-
-The cloud-live path keeps the same app shape but connects it to deployable Azure services.
-
-```text
-Browser
-  -> Azure Container App
-    -> FastAPI + static frontend
-    -> Azure Maps
-    -> Blob Storage
-    -> Cosmos DB
-    -> Application Insights / Log Analytics
-```
-
-Use this Azure path to show how the local app can be deployed and extended with cloud services.
-
-Show a simple layer diagram with Browser, Container Apps, FastAPI, Azure Maps, Blob Storage, Cosmos DB, and App Insights.
-
-[Screenshot placeholder: Azure service layer diagram]  
-
-# Section 3 — Project Structure
-
-The project is small enough to navigate quickly. Start with the app shell, API, frontend, sample data, and deployment files.
+Start with the app shell, API, frontend, sample data, deployment files, and tests.
 
 ```text
 riyadh-mobility-intelligence-dashboard/
@@ -176,127 +155,150 @@ riyadh-mobility-intelligence-dashboard/
 │   ├── data_access.py           # sample, Blob, Cosmos data loading
 │   ├── scoring.py               # district mobility score
 │   ├── azure_clients.py         # Azure SDK client setup
+│   ├── config.py                # environment variables and defaults
 │   └── static/
 │       ├── index.html           # single-page dashboard shell
 │       ├── src/                 # frontend JavaScript and CSS
 │       └── sample-data/         # always-on sample files
 ├── scripts/                     # fetch, normalize, upload, seed, validate
-├── infra/                       # Bicep modules
+├── infra/                       # Bicep infrastructure modules
 ├── docs/                        # build guide and supporting notes
 ├── tests/                       # scoring, API, and data-shape checks
-└── azure.yaml                   # Azure Developer CLI project
+├── azure.yaml                   # Azure Developer CLI project
+├── Dockerfile                   # container definition
+└── requirements.txt             # Python dependencies
 ```
-
-## File Map
 
 | Area | Start here | Why it matters |
 |---|---|---|
-| Backend | `app/main.py`, `app/routes.py` | app shell and API contract |
-| Data | `app/data_access.py`, `app/static/sample-data/` | fallback-aware data loading |
-| Scoring | `app/scoring.py` | transparent district score |
-| Frontend | `app/static/src/main.js`, `map.js`, `layers.js` | app boot, map, and overlays |
+| Backend entrypoints | `app/main.py`, `app/routes.py` | FastAPI app shell, static serving, API contract |
+| Data loading | `app/data_access.py`, `app/static/sample-data/` | sample, Blob, and Cosmos fallback behavior |
+| Score formula | `app/scoring.py` | transparent scoring logic that teams can adapt |
+| Frontend | `app/static/index.html`, `app/static/src/main.js` | page shell, boot sequence, API orchestration |
+| Map behavior | `app/static/src/map.js`, `app/static/src/layers.js` | Azure Maps path, local fallback, overlays |
 | Deployment | `azure.yaml`, `infra/main.bicep`, `scripts/deploy_azure.sh` | cloud-live path |
-| Demo | `README.md` | short judge-facing narrative |
+| Tests | `tests/` | API, data-shape, health, and scoring checks |
 
-Use a five-icon row for Backend, Data, Map, Scoring, Cloud-Live.
+## Where the Data Comes From
 
-[Icon placement: app layers]  
+The bundled sample data is derived from Riyadh Commission for Riyadh City open geospatial datasets. The files live under `app/static/sample-data/` and keep the app useful even when no cloud services are configured.
 
-# Section 4 — Running It Locally
+| File | Contents | Records |
+|---|---|---:|
+| `riyadh_metro_lines_sample.geojson` | Metro line features with names, colors, and geometry | 6 |
+| `riyadh_bus_routes_sample.geojson` | Bus route features with route IDs and geometry | 100 |
+| `district_centers_sample.geojson` | Riyadh district center points with English and Arabic names | 10 |
+| `mock_live_events_sample.json` | Sample delay or incident markers | variable |
 
-Local setup is deliberately simple. The first goal is to get a useful screen running before adding cloud services.
-
-## Step 1: Create the Environment
+Fresh data workflow:
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
+python3 scripts/fetch_rcrc_data.py
+python3 scripts/normalize_to_geojson.py
+python3 scripts/validate_data.py
+python3 scripts/upload_to_blob.py              # optional cloud step
+PYTHONPATH=. python3 scripts/seed_cosmos.py    # optional cloud step
+```
+
+\newpage
+
+# 6. Run Locally
+
+Local setup is deliberately direct. The goal is to get one useful screen running before adding cloud services.
+
+## Play-by-Play
+
+```bash
+git clone https://github.com/Esturban/microsoft-hackathon-riyadh-mobility.git
+cd microsoft-hackathon-riyadh-mobility
+python3 -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 cp .env.example .env
 ```
 
-## Step 2: Start the App
+Open `.env` and confirm the default local mode:
+
+```text
+DATA_MODE=sample
+```
+
+Start the app:
 
 ```bash
 python -m uvicorn app.main:app --reload
 ```
 
-Open:
+Open the dashboard:
 
 ```text
 http://127.0.0.1:8000
 ```
 
-Without `AZURE_MAPS_KEY`, the app should still run with the local map fallback and sample data.
+The first page load can take time. Wait for the district selector, layer controls, map container, and score panel area before deciding whether the app is loaded. If Azure Maps is not configured, the app should use the OpenStreetMap fallback and still show the route overlays.
 
-## Step 3: Check the API
+![Map layers screenshot](docs/assets/rebuild-guide/map-layers.png)
 
-Open these endpoints:
+*Figure: metro and bus layers rendered locally with OpenStreetMap fallback tiles.*
 
-```text
-/health
-/api/config
-/api/routes
-/api/districts
-/api/data-status
+## Local Verification Checklist
+
+- Dashboard loads at `http://127.0.0.1:8000`.
+- Map renders using Azure Maps or the OpenStreetMap fallback.
+- Metro and bus layers appear.
+- District selector has 10 Riyadh districts.
+- Selecting a district updates the score panel.
+- `/health` returns `{"status":"ok"}`.
+- `/api/data-status` reports active sample mode.
+
+Useful checks:
+
+```bash
+curl -s http://127.0.0.1:8000/health
+curl -s http://127.0.0.1:8000/api/data-status | python -m json.tool
+python -m pytest
+python scripts/validate_data.py
 ```
 
-The `/api/data-status` endpoint is especially useful because it tells builders which data source is active and whether the fallback path is working.
+# 7. Backend Walkthrough
 
-Show the dashboard loaded in the browser with metro, bus, district, and score UI visible.
+The backend is a small FastAPI application. It serves both the API and the static frontend so the starter kit stays easy to run and easy to deploy.
 
-[Screenshot placeholder: local dashboard]  
+| Endpoint | Purpose | What a builder should look for |
+|---|---|---|
+| `GET /health` | Confirms the app is alive | `{"status":"ok"}` |
+| `GET /api/config` | Sends runtime settings to the frontend | app name, map mode, access buffer, data mode |
+| `GET /api/routes` | Returns route summaries and KPI counts | metro and bus route counts |
+| `GET /api/routes/geojson?mode=metro` | Returns map-ready metro geometry | GeoJSON payload and source |
+| `GET /api/routes/geojson?mode=bus` | Returns map-ready bus geometry | GeoJSON payload and source |
+| `GET /api/districts` | Returns district selector records | 10 district items in sample mode |
+| `GET /api/score?districtId=...` | Returns score and score components | score, rating, metro count, bus count, penalty |
+| `GET /api/live-events` | Returns mock or configured event overlays | delay/event items and source |
+| `GET /api/data-status` | Explains active data source and fallback status | current mode, counts, fallback message |
 
-Show the JSON response that explains the active data source.
+![API data status screenshot](docs/assets/rebuild-guide/api-data-status.png)
 
-[Screenshot placeholder: `/api/data-status`]  
+*Figure: `/api/data-status` confirms sample mode and explains the fallback path.*
 
-# Section 5 — How the Backend Works
+## Score Request Flow
 
-The backend is a small FastAPI application. It serves both the API and the static frontend so the starter kit stays easy to run and deploy.
+![Score request flow](docs/assets/rebuild-guide/diagram-score-request.png)
 
-## API Endpoints
-
-| Endpoint | Purpose |
-|---|---|
-| `GET /health` | confirms the app is alive |
-| `GET /api/config` | gives the frontend runtime configuration |
-| `GET /api/routes` | returns route summaries and KPI data |
-| `GET /api/routes/geojson?mode=metro-or-bus` | returns map-ready route geometry |
-| `GET /api/districts` | returns district selector data |
-| `GET /api/score?districtId=...` | returns district score and score components |
-| `GET /api/live-events` | returns mock or configured event overlays |
-| `GET /api/data-status` | explains active data source and fallback status |
-
-## Fallback Chain
-
-The running app should not depend on live external data endpoints. Data fetches happen through scripts. The app reads prepared local or Azure-backed data.
-
-```text
-Cosmos DB records
-  -> Blob Storage files
-    -> bundled sample files
-```
-
-Key design principle: if Azure data is unavailable, the app should fall back to sample files instead of failing during a workshop or judging demo.
-
-## Scoring
-
-Keep the score easy to explain:
+The score formula stays on the backend so it can be tested and reused:
 
 ```text
 score = (nearby metro count x 3) + nearby bus count - live delay penalty
 ```
 
-The score lives on the backend so it can be tested, reused, and explained as part of the API contract.
+Keep this formula easy to explain. Teams can later replace the weights or add new inputs such as parking, walkability, public services, heat, or event density.
 
-# Section 6 — How the Frontend Works
+\newpage
 
-The frontend is a single-page application built with Vanilla JavaScript. This keeps the hackathon starter kit accessible to mixed-experience teams.
+# 8. Frontend Walkthrough
 
-## App Boot
+The frontend is a single-page application built with Vanilla JavaScript. This keeps the starter kit accessible to mixed-experience teams while still showing a complete app workflow.
 
-`main.js` coordinates the page. On startup, it fetches configuration, route summaries, GeoJSON, districts, live events, and data status.
+On startup, `app/static/src/main.js` fetches the core runtime data in parallel:
 
 ```javascript
 const [config, routes, metro, bus, districts, events, dataStatus] = await Promise.all([
@@ -310,83 +312,117 @@ const [config, routes, metro, bus, districts, events, dataStatus] = await Promis
 ]);
 ```
 
-## Map Layers
+The map layer system makes the city data visible and explainable.
 
-The map layer system should make the city data visible and explainable.
+| Layer | What it shows | Why it matters |
+|---|---|---|
+| Metro lines | high-capacity mobility corridors | shows structural transit coverage |
+| Bus routes | surface transit coverage | shows fine-grained network reach |
+| Districts | selectable district points | anchors the score conversation |
+| Live events | delay or incident markers | demonstrates cloud-live extension potential |
+| Accessibility buffer | rough selected-district service area | makes the score formula visible |
 
-| Layer | What it shows |
-|---|---|
-| Metro lines | high-capacity mobility corridors |
-| Bus routes | surface transit coverage |
-| Districts | selectable district points |
-| Live events | route delay or incident markers |
-| Accessibility buffer | rough selected-district service area |
-
-Show the map with route overlays, toggles, and selected district focus.
-
-[Screenshot placeholder: map with metro and bus layers]  
-
-## District Score Panel
+![District selector screenshot](docs/assets/rebuild-guide/district-selector.png)
 
 The score panel translates raw counts into a judge-friendly story:
 
 - selected district name
 - score number
-- metro and bus counts
+- rating
+- nearby metro count
+- nearby bus count
 - live-event penalty
-- explanation of the formula
-- active data source
+- readable formula
+- active data source context
 
-Show a selected district with the score, formula components, and data source badge.
+![District score panel screenshot](docs/assets/rebuild-guide/district-score-panel.png)
 
-[Screenshot placeholder: district score panel]  
+*Figure: district score panel after selecting a Riyadh district.*
 
-# Section 7 — Cloud-Live Path
+# 9. Cloud-Live Deployment
 
-The cloud-live path is the deployable version of the same starter kit. It shows how a hackathon prototype can become credible enough for pilot discussion.
+The cloud-live path is the deployable version of the same starter kit. It is useful when a team needs to show that the app can move beyond a laptop and into a credible Azure environment.
 
-## Azure Services
+## Prerequisites
 
-| Service | Role in the starter kit |
-|---|---|
-| Azure Container Apps | hosts FastAPI and the static frontend |
-| Azure Container Registry | stores the built container image |
-| Azure Maps | provides cloud-native map services |
-| Blob Storage | stores raw and processed mobility files |
-| Cosmos DB | stores app-shaped route, district, and event records |
-| Application Insights | tracks app health and API failures |
-| Log Analytics | supports logs and diagnostics |
-| Azure Developer CLI | deploys the app and infrastructure |
-| Bicep | defines the Azure resources in code |
+Before deploying, confirm:
 
-## Deploy
+- Azure account is available.
+- Azure CLI is installed.
+- Azure Developer CLI is installed.
+- Shell is authenticated to the right Azure tenant and subscription.
+- Target location and resource group are known.
+- Local app and tests already pass.
+
+Sign in:
 
 ```bash
 az login
 azd auth login
 azd init
+```
+
+Deploy with the helper:
+
+```bash
 bash scripts/deploy_azure.sh
 ```
 
+Optional location and resource group:
+
+```bash
+bash scripts/deploy_azure.sh eastus rg-riyadh-ud-eastus
+```
+
+The helper prints active environment values, then runs the Azure Developer CLI deployment workflow.
+
+## What Deployment Creates
+
+| Azure resource | Role |
+|---|---|
+| Azure Container Apps | hosts FastAPI and the static frontend |
+| Azure Container Registry | stores the built container image |
+| Azure Maps account | supports cloud map services |
+| Azure Blob Storage | stores raw and processed mobility files |
+| Azure Cosmos DB | stores route, district, and event records |
+| Application Insights | tracks health, latency, failures, and requests |
+| Log Analytics | stores logs and diagnostics |
+
 After deployment:
 
-- open the deployed app URL
-- check `/health`
-- check `/api/data-status`
-- upload or seed cloud data if using Blob or Cosmos
-- inspect App Insights if the deployed app fails
+1. Copy `WEB_APP_URL` from `azd` output.
+2. Open the deployed app in a browser.
+3. Check `<WEB_APP_URL>/health`.
+4. Check `<WEB_APP_URL>/api/data-status`.
+5. Confirm the active data mode is expected.
+6. Upload processed files to Blob if using Blob mode.
+7. Seed Cosmos DB if using Cosmos mode.
+8. Inspect App Insights if the deployed app fails or loads slowly.
 
-Show the deployed app URL in a browser with route layers and score panel visible.
+Optional cloud data steps:
 
-[Screenshot placeholder: deployed app running on Azure]  
+```bash
+python3 scripts/upload_to_blob.py
+PYTHONPATH=. python3 scripts/seed_cosmos.py
+```
 
-# Section 8 — Starter Kit Routes
+Teardown when finished:
 
-This codebase should be treated as a scaffold. Teams can reuse the same architecture for different urban intelligence ideas.
+```bash
+bash scripts/destroy_resource_group.sh --yes
+```
+
+The teardown script deletes the current Azure resource group and intentionally requires `--yes`.
+
+\newpage
+
+# 10. Starter Kit Adaptation Routes
+
+Treat this codebase as a scaffold. Teams should keep the working shell, replace the domain data, and adapt the score or map layers toward the track they are pursuing.
 
 ## Route 1: Mobility Command View
 
-Best for Transformational Technology.
+Best fit: Transformational Technology.
 
 Keep:
 
@@ -394,58 +430,61 @@ Keep:
 - event overlay
 - district selector
 - route KPIs
+- data-status debugging
 
-Add:
+Replace or add:
 
-- congestion forecast API
+- real congestion or delay source
 - parking demand layer
 - peak-load simulation
 - route delay explanations
 
-Starter-kit route: turn the current dashboard into a live mobility command view for mentors and judges.
+Likely Azure services: Azure Maps, Container Apps, Event Hubs, Stream Analytics, Cosmos DB, Application Insights.
 
 ## Route 2: District Intelligence
 
-Best for Prosperous People.
+Best fit: Prosperous People.
 
 Keep:
 
 - district selector
 - scoring panel
 - map focus behavior
-- Cosmos-backed district records
+- Cosmos-ready district records
 
-Add:
+Replace or add:
 
-- 15-minute city compliance indicators
-- walkability score
-- service access layers
+- service access layers such as clinics, schools, parks, or transit stops
+- 15-minute city score
+- walkability indicators
 - district comparison panel
 
-Starter-kit route: evolve the score from mobility access into district intelligence.
+Likely Azure services: Azure Maps, Blob Storage, Cosmos DB, Container Apps, optional Azure OpenAI for plain-language score explanations.
 
 ## Route 3: Sustainable Mobility Overlay
 
-Best for Sustainable Solutions.
+Best fit: Sustainable Solutions.
 
 Keep:
 
 - mobility layers
 - selected district context
 - route scoring pattern
+- fallback-aware sample files
 
-Add:
+Replace or add:
 
-- AQI or heat layer
+- AQI stations
+- heat layer
 - pollution hotspot markers
 - clean corridor recommendations
-- heat-stress routing notes
+- emissions or low-carbon route scoring
 
-Starter-kit route: combine mobility with environmental conditions for cleaner route planning.
+Likely Azure services: Azure Maps, Blob Storage, Cosmos DB, Power BI, Application Insights.
 
 ## Route 4: Culture and Visitor Movement
 
-Best for Culture.
+Best fit: Culture.
 
 Keep:
 
@@ -454,106 +493,92 @@ Keep:
 - route overlays
 - selected place or district panel
 
-Add:
+Replace or add:
 
 - heritage site markers
 - crowd-sensitive route suggestions
 - multilingual visitor notes
 - event-day access planning
 
-Starter-kit route: adapt the map into a visitor mobility and cultural access prototype.
+Likely Azure services: Azure Maps, Cosmos DB, Blob Storage, Container Apps, optional translation services.
 
-# Section 9 — Single Page Now, Multi-Page Later
+# 11. Demo Flow
 
-The current app works as a single-page application. That is the right starting point for a hackathon because it keeps the product easy to run, inspect, and present.
-
-As the starter kit grows, it can become a multi-page application.
-
-| Future page | Purpose | When to add it |
-|---|---|---|
-| `/dashboard` | main map and scoring view | when the app needs a cleaner landing route |
-| `/data-status` | human-readable source and fallback view | when mentors need to inspect cloud-live state |
-| `/demo` | judge-facing presentation mode | when preparing final pitches |
-| `/admin` | data refresh or seeding controls | when scripts become too hidden for teams |
-| `/extensions` | track-specific starter routes | when multiple teams reuse the scaffold |
-
-Key design principle: keep the first useful version single-page. Add pages only when they clarify the builder or demo experience.
-
-# Section 10 — Demo and Extension Ideas
-
-## Judge-Facing Demo Flow
-
-Use the demo script in `README.md` as the short presentation reference.
+Use this short flow when presenting to mentors or judges.
 
 | Step | Show | Explain |
 |---:|---|---|
-| 1 | dashboard landing view | the app is a Riyadh mobility starter kit |
-| 2 | metro and bus toggles | map layers show mobility infrastructure |
-| 3 | district selector | district context drives scoring |
-| 4 | score panel | score is transparent and easy to adjust |
-| 5 | `/api/data-status` | app is fallback-aware and cloud-live ready |
-| 6 | Azure layer diagram | services map cleanly to hosting, map, files, records, and monitoring |
-| 7 | starter kit routes | the same scaffold supports multiple hackathon tracks |
+| 1 | Dashboard landing view | This is a Riyadh mobility intelligence starter kit, not just a static map |
+| 2 | Metro and bus toggles | The map layers show public transport coverage |
+| 3 | District selector | District context drives the scoring workflow |
+| 4 | Score panel | The score is transparent and easy to adapt |
+| 5 | `/api/data-status` | The app is fallback-aware and cloud-live ready |
+| 6 | Azure workflow diagram | Services map to hosting, maps, files, records, and monitoring |
+| 7 | Adaptation routes | The same scaffold supports multiple hackathon tracks |
 
-## Safe Extensions
+Keep the live demo local unless the deployed app has already passed `/health` and `/api/data-status` checks.
 
-Good first extensions:
+\newpage
 
-- add more districts or points of interest
-- add a parking or congestion layer
-- adjust score weights by track
-- add event severity to the KPI panel
-- add a Power BI export path
-- add a demo presentation page
-
-Stretch extensions:
-
-- Event Hubs for live event ingestion
-- Stream Analytics for live aggregation
-- plain-English score explanations in the frontend or API
-- Azure Digital Twins for district or event simulation
-- Power Apps for field-service workflows
-
-# Appendix — Quick Reference
+# Appendix
 
 ## Common Commands
 
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
 python -m uvicorn app.main:app --reload
-pytest
+python -m pytest
+python scripts/validate_data.py
 bash scripts/deploy_azure.sh
+bash scripts/destroy_resource_group.sh --yes
 ```
 
-## Reference Index
+## Debugging Checklist
 
-| Need | Open |
-|---|---|
-| student quickstart | `README.md` |
-| run, test, deploy, troubleshoot | `README.md` |
-| demo script | `README.md` |
-| documentation index | `docs/README.md` |
-| build guide source | `docs/rebuild_guide.md` |
-| formatted build guide | `docs/rebuild_guide.docx` |
+- If the page loads slowly, wait for the district selector, layer controls, map area, and score panel before judging success.
+- If the map is blank, clear `AZURE_MAPS_KEY` in `.env` and reload so the local fallback can be used.
+- If cloud data is missing, open `/api/data-status` first.
+- If sample files fail, run `python scripts/validate_data.py`.
+- If the deployed app fails, check `/health`, `/api/data-status`, Container App logs, and Application Insights.
 
 ## Visual Asset Checklist
 
-| Asset slot | Recommended visual |
+| Asset | Included in this guide |
 |---|---|
-| partner/program row | approved atomcamp Arabia, Microsoft, Riyadh Urban Intelligence Lab, and partner marks |
-| dashboard loaded locally | browser screenshot with map, layers, district selector, and score panel |
-| four hackathon tracks | compact icon row for technology, people, sustainability, and culture |
-| Azure service layer diagram | simple diagram from browser to Container Apps, FastAPI, Azure Maps, Blob, Cosmos, and App Insights |
-| app layers | icon row for Backend, Data, Map, Scoring, and Cloud-Live |
-| `/api/data-status` | JSON screenshot showing active data source and fallback status |
-| deployed app | browser screenshot of the Azure-hosted app |
+| app layer icon row | `docs/assets/rebuild-guide/icon-row-app-layers.png` |
+| four-track icon row | `docs/assets/rebuild-guide/icon-row-tracks.png` |
+| local dashboard screenshot | `docs/assets/rebuild-guide/local-dashboard.png` |
+| map layer screenshot | `docs/assets/rebuild-guide/map-layers.png` |
+| district selector screenshot | `docs/assets/rebuild-guide/district-selector.png` |
+| district score panel screenshot | `docs/assets/rebuild-guide/district-score-panel.png` |
+| data-status endpoint screenshot | `docs/assets/rebuild-guide/api-data-status.png` |
+| local workflow diagram | `docs/assets/rebuild-guide/diagram-local-first.png` |
+| Azure workflow diagram | `docs/assets/rebuild-guide/diagram-azure-backed.png` |
+| fallback chain diagram | `docs/assets/rebuild-guide/diagram-data-fallback.png` |
+| score request diagram | `docs/assets/rebuild-guide/diagram-score-request.png` |
+
+## Reference Links
+
+| Need | Open |
+|---|---|
+| GitHub repo | [github.com/Esturban/microsoft-hackathon-riyadh-mobility](https://github.com/Esturban/microsoft-hackathon-riyadh-mobility) |
+| Local dashboard | [http://127.0.0.1:8000](http://127.0.0.1:8000) |
+| atomcamp Arabia | [atomcamparabia.com](https://atomcamparabia.com/) |
+| Azure Developer CLI docs | [Microsoft Learn](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/) |
+| Azure Maps docs | [Microsoft Learn](https://learn.microsoft.com/en-us/azure/azure-maps/) |
+| Student quickstart | `README.md` |
+| Architecture notes | `docs/architecture.md` |
+| Azure deployment notes | `docs/azure_deployment.md` |
+| Data source notes | `docs/data_sources.md` |
+| Troubleshooting | `docs/troubleshooting.md` |
+| Demo script | `docs/judging_demo_script.md` |
 
 ## Glossary
 
-**Azure-backed live layer**  
+**Azure-backed live path**  
 The deployable path where the starter kit uses Azure services for maps, hosting, files, records, and monitoring.
 
 **Blob Storage**  
