@@ -1,6 +1,6 @@
 ---
 title: "Riyadh Mobility Intelligence Starter Kit"
-subtitle: "Build and Deployment Guide"
+subtitle: "Build and Deployment Workbook"
 author: "Prepared for atomcamp Arabia and the Riyadh Urban Development Hackathon in collaboration with Microsoft"
 date: "2026-06-03"
 lang: "en-US"
@@ -8,14 +8,14 @@ lang: "en-US"
 
 # Riyadh Mobility Intelligence Starter Kit
 
-## Build and Deployment Guide
+## Build and Deployment Workbook
 
-This guide helps hackathon teams rebuild, run, adapt, and deploy the Riyadh Mobility Intelligence starter kit for urban intelligence use cases.
+This working document helps August hackathon teams rebuild, run, adapt, and deploy the Riyadh Mobility Intelligence starter kit for Riyadh urban development use cases.
 
 **Repository:** [github.com/Esturban/microsoft-hackathon-riyadh-mobility](https://github.com/Esturban/microsoft-hackathon-riyadh-mobility)  
 **Local app:** [http://127.0.0.1:8000](http://127.0.0.1:8000)  
 **Deployed app:** Paste `WEB_APP_URL` from `azd up` output here  
-**Program links:** [atomcamp Arabia](https://atomcamparabia.com/) | [Azure Developer CLI](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/) | [Azure Maps](https://learn.microsoft.com/en-us/azure/azure-maps/)
+**Resource index:** see the appendix for Azure, deployment, and project references.
 
 **Partner/program mark row:** add approved atomcamp Arabia, Microsoft, Riyadh Urban Intelligence Lab, and strategic partner logos here when final brand assets are available.
 
@@ -23,7 +23,7 @@ This guide helps hackathon teams rebuild, run, adapt, and deploy the Riyadh Mobi
 
 # How to Use This Guide
 
-This is a build workbook for hackathon builders, mentors, reviewers, and teams adapting the scaffold. It is not a formal transport model or a production planning system. It is a practical starter kit that shows how open mobility data, a simple scoring API, map layers, and Azure services can fit together in a credible prototype.
+This is a build workbook for hackathon builders, mentors, reviewers, and teams adapting the scaffold during the August hackathon. It is not a formal transport model or a production planning system. It is a practical starter kit that shows how open mobility data, a simple scoring API, map layers, and Azure services can fit together in a credible prototype.
 
 Use the guide in this order:
 
@@ -560,7 +560,9 @@ bash scripts/destroy_resource_group.sh --yes
 | fallback chain diagram | `docs/assets/rebuild-guide/diagram-data-fallback.png` |
 | score request diagram | `docs/assets/rebuild-guide/diagram-score-request.png` |
 
-## Reference Links
+## Resource Index
+
+Use this page as the resource hub instead of repeating links in the footer. Keep the cover page focused on the repo, local app, and deployed app URL; keep this appendix focused on build, deployment, and Azure references.
 
 | Need | Open |
 |---|---|
@@ -568,7 +570,10 @@ bash scripts/destroy_resource_group.sh --yes
 | Local dashboard | [http://127.0.0.1:8000](http://127.0.0.1:8000) |
 | atomcamp Arabia | [atomcamparabia.com](https://atomcamparabia.com/) |
 | Azure Developer CLI docs | [Microsoft Learn](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/) |
+| `azd up` workflow | [Microsoft Learn](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/azd-up-workflow) |
+| Azure Container Apps docs | [Microsoft Learn](https://learn.microsoft.com/en-us/azure/container-apps/overview) |
 | Azure Maps docs | [Microsoft Learn](https://learn.microsoft.com/en-us/azure/azure-maps/) |
+| Azure Cosmos DB docs | [Microsoft Learn](https://learn.microsoft.com/en-us/cosmos-db/) |
 | Student quickstart | `README.md` |
 | Architecture notes | `docs/architecture.md` |
 | Azure deployment notes | `docs/azure_deployment.md` |
