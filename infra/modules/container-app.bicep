@@ -15,7 +15,7 @@ param registryUsername string
 @secure()
 param registryPassword string
 
-resource env 'Microsoft.App/managedEnvironments@2024-03-01' = {
+resource env 'Microsoft.App/managedEnvironments@2026-01-01' = {
   name: containerAppEnvironmentName
   location: location
   properties: {
@@ -29,7 +29,7 @@ resource env 'Microsoft.App/managedEnvironments@2024-03-01' = {
   }
 }
 
-resource app 'Microsoft.App/containerApps@2024-03-01' = {
+resource app 'Microsoft.App/containerApps@2026-01-01' = {
   name: containerAppName
   location: location
   tags: {
@@ -39,7 +39,7 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = {
     type: 'SystemAssigned'
   }
   properties: {
-    managedEnvironmentId: env.id
+    environmentId: env.id
     configuration: {
       registries: [
         {
