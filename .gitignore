@@ -33,3 +33,7 @@ package-lock.json
 
 # Session / agent context artifacts
 .context/
+AGENTS.md
+AGENTS.MD
+CLAUDE.md
+GEMINI.md
