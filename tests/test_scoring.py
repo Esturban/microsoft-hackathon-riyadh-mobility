@@ -2,7 +2,9 @@ from app.scoring import compute_accessibility_score, compute_delay_penalty
 
 
 def test_accessibility_score_formula():
-    result = compute_accessibility_score(nearby_metro_count=2, nearby_bus_count=6, live_delay_penalty=1)
+    result = compute_accessibility_score(
+        nearby_metro_count=2, nearby_bus_count=6, live_delay_penalty=1
+    )
     assert result["score"] == 11
     assert result["rating"] == "High"
 

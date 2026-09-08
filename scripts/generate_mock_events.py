@@ -5,11 +5,13 @@ import os
 import random
 from datetime import datetime, timezone
 from pathlib import Path
- 
+
 from azure.eventhub import EventData, EventHubProducerClient
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-OUTPUT_FILE = BASE_DIR / "app" / "static" / "sample-data" / "mock_live_events_sample.json"
+OUTPUT_FILE = (
+    BASE_DIR / "app" / "static" / "sample-data" / "mock_live_events_sample.json"
+)
 
 ROUTES = ["bus-route-12", "bus-route-22", "metro-blue-line", "metro-red-line"]
 DISTRICTS = [

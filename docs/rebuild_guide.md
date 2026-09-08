@@ -1,521 +1,526 @@
-![](docs/assets/rebuild-guide/premium-cover-page.png){width=7.3in}
+# Riyadh Mobility Dashboard Team Runbook
 
-\newpage
+**atomcamp Arabia and Microsoft Riyadh Urban Hackathon**
 
-![](docs/assets/rebuild-guide/premium-how-to-page.png){width=7.3in}
+This guide is for a mixed team. A manager can lead the session, a runtime owner can run the dashboard on one laptop, a change owner can make small edits, and an Azure owner can handle cloud resources. You do not need to understand the whole codebase before you start.
 
-\newpage
+**Public dashboard:** [Open the deployed application](https://ca-rmd-api-riyadh-ud-ua-aesdq5.jollyplant-57daa6ab.uaenorth.azurecontainerapps.io/)
 
-![](docs/assets/rebuild-guide/premium-executive-build-brief.png){width=7.3in}
+The local path is the safe starting point. It uses bundled sample data, needs no Azure login, and creates no Azure costs.
 
-\newpage
+![Local dashboard showing Riyadh map routes and district score](assets/rebuild-guide/local-dashboard-overview.png){width=6.55in}
 
-![](docs/assets/rebuild-guide/premium-product-story.png){width=7.3in}
+*The local dashboard: transport routes, district selection, and a transparent accessibility score.*
 
-\newpage
+<!-- pagebreak -->
 
-![](docs/assets/rebuild-guide/premium-track-mapping.png){width=7.3in}
+## 1 Pick the route and assign people
 
-\newpage
+Start by deciding what the team actually needs. Do not install tools or touch Azure if the goal is only to show the existing dashboard.
 
-![](docs/assets/rebuild-guide/premium-services-tools-matrix.png){width=7.3in}
-
-\newpage
-
-![](docs/assets/rebuild-guide/premium-architecture-blueprint.png){width=7.3in}
-
-\newpage
-
-# 3. Architecture and Build Path
-
-The app is designed to work locally first, then graduate into an Azure-backed live path. The core principle is simple: **the app must remain useful even when Azure credentials, remote services, or live data are unavailable.**
-
-## Local-First Workflow
-
-Local mode is the first build milestone. It should work on a builder laptop with no Azure account configured.
-
-![Local-first workflow](docs/assets/rebuild-guide/diagram-local-first.png)
-
-Local mode uses the same UI and API shape that the cloud deployment uses. The difference is the data source: bundled sample files replace cloud-backed records.
-
-## Azure-Backed Workflow
-
-When deployed, the same containerized app runs in Azure Container Apps and can connect to Azure services for maps, storage, records, and monitoring.
-
-![Azure-backed workflow](docs/assets/rebuild-guide/diagram-azure-backed.png)
-
-Use this path when the team is ready to show a credible cloud deployment or run post-deploy smoke tests.
-
-## Data Fallback Chain
-
-The app should not fail just because cloud data is missing. Data access is intentionally fallback-aware.
-
-![Data fallback chain](docs/assets/rebuild-guide/diagram-data-fallback.png)
-
-In practice, builders should start with `DATA_MODE=sample`, then move to Blob or Cosmos only after the local app is working.
-
-# 4. Project Structure
-
-Start with the app shell, API, frontend, sample data, deployment files, and tests.
-
-```text
-riyadh-mobility-intelligence-dashboard/
-├── app/
-│   ├── main.py                  # FastAPI app shell and static serving
-│   ├── routes.py                # API endpoints
-│   ├── data_access.py           # sample, Blob, Cosmos data loading
-│   ├── scoring.py               # district mobility score
-│   ├── azure_clients.py         # Azure SDK client setup
-│   ├── config.py                # environment variables and defaults
-│   └── static/
-│       ├── index.html           # single-page dashboard shell
-│       ├── src/                 # frontend JavaScript and CSS
-│       └── sample-data/         # always-on sample files
-├── scripts/                     # fetch, normalize, upload, seed, validate
-├── infra/                       # Bicep infrastructure modules
-├── docs/                        # build guide and supporting notes
-├── tests/                       # scoring, API, and data-shape checks
-├── azure.yaml                   # Azure Developer CLI project
-├── Dockerfile                   # container definition
-└── requirements.txt             # Python dependencies
-```
-
-| Area | Start here | Why it matters |
+| If your goal is | Do this | Stop when |
 |---|---|---|
-| Backend entrypoints | `app/main.py`, `app/routes.py` | FastAPI app shell, static serving, API contract |
-| Data loading | `app/data_access.py`, `app/static/sample-data/` | sample, Blob, and Cosmos fallback behavior |
-| Score formula | `app/scoring.py` | transparent scoring logic that teams can adapt |
-| Frontend | `app/static/index.html`, `app/static/src/main.js` | page shell, boot sequence, API orchestration |
-| Map behavior | `app/static/src/map.js`, `app/static/src/layers.js` | Azure Maps path, local fallback, overlays |
-| Deployment | `azure.yaml`, `infra/main.bicep`, `scripts/deploy_azure.sh` | cloud-live path |
-| Tests | `tests/` | API, data-shape, health, and scoring checks |
+| Show the existing app | Open the public dashboard | The demo is complete |
+| Change the app locally | Assign a runtime owner and follow Sections 2–8 | The local checks pass |
+| Publish a changed app | Ask the Azure owner to follow Section 10 | The deployed smoke test passes |
 
-## Where the Data Comes From
+Give each job to a named person before anyone starts. One person may fill more than one role on a small team.
 
-The bundled sample data is derived from Riyadh Commission for Riyadh City open geospatial datasets. The files live under `app/static/sample-data/` and keep the app useful even when no cloud services are configured.
+| Role | Owns | Does not need to do |
+|---|---|---|
+| Manager or facilitator | Goal, demo flow, decisions, and handoff notes | Edit code or Azure resources |
+| Runtime owner | Installs the local tools, runs the dashboard, and completes checks | Deploy to Azure |
+| Change owner | Makes one small code or data change at a time and retests | Approve cloud spending |
+| Azure owner | Subscription, resource group, cloud deployment, and cost controls | Change the product story |
 
-| File | Contents | Records |
-|---|---|---:|
-| `riyadh_metro_lines_sample.geojson` | Metro line features with names, colors, and geometry | 6 |
-| `riyadh_bus_routes_sample.geojson` | Bus route features with route IDs and geometry | 100 |
-| `district_centers_sample.geojson` | Riyadh district center points with English and Arabic names | 10 |
-| `mock_live_events_sample.json` | Sample delay or incident markers | variable |
+Follow this order every time:
 
-Fresh data workflow:
+1. The manager chooses the route above and names the owners.
+2. The runtime owner follows Sections 2–5 until the local dashboard works.
+3. The change owner follows Sections 6–8 for one small change.
+4. The manager repeats the checks and records the result.
+5. Only then does the Azure owner use Section 10.
+
+![Local first workflow from browser to API to sample data to score panel](assets/rebuild-guide/diagram-local-first.png){width=6.55in}
+
+*The same workflow works locally before any cloud services are introduced.*
+
+**Success in the first 20 minutes:** the dashboard opens at `http://127.0.0.1:8000`; Metro and Bus layers can be toggled; selecting a district updates the score; `/health` returns `{"status":"ok"}`.
+
+**If nobody on the team writes code:** use the public dashboard for the demo, then ask a runtime owner or mentor to perform the local setup. The manager does not need to edit files, install Azure tools, or run cleanup commands.
+
+**Manager fast lane:** if the goal is a demo, open the public dashboard and stop. If local setup fails once, stop repeating commands and send the support note in Section 6.
+
+<!-- pagebreak -->
+
+## 2 Get the computer ready
+
+This section explains the few computer concepts used later. Read it once before copying commands.
+
+### Words you need
+
+| Word | Plain meaning |
+|---|---|
+| Terminal | The app where you type commands. On macOS it is Terminal; on Windows it is PowerShell. |
+| Repository | The project folder downloaded from GitHub. |
+| Command | A short instruction typed into the terminal, then confirmed with Enter. |
+| Virtual environment | A private project toolbox named `.venv`; it keeps this app’s Python packages separate. |
+| Localhost | This laptop. `127.0.0.1:8000` means the browser is talking to the app on this laptop. |
+
+### Install the two required tools
+
+You need Git, Python 3.11 or newer, an internet connection for the one-time download, and a terminal. If the laptop is managed by an organisation, ask IT or the runtime owner to install them.
+
+- [Install Git](https://git-scm.com/downloads)
+- [Install Python](https://www.python.org/downloads/)
+- Optional plain-text editor: [Visual Studio Code](https://code.visualstudio.com/download)
+
+On Windows, select **Add Python to PATH** in the Python installer if that option appears. After installing, close and reopen PowerShell.
+
+Use a plain-text editor for code and data files. Do not open Python, JSON, or GeoJSON files in Word or Pages.
+
+### Check the tools
+
+**macOS Terminal**
 
 ```bash
-python3 scripts/fetch_rcrc_data.py
-python3 scripts/normalize_to_geojson.py
-python3 scripts/validate_data.py
-python3 scripts/upload_to_blob.py              # optional cloud step
-PYTHONPATH=. python3 scripts/seed_cosmos.py    # optional cloud step
+git --version
+python3 --version
 ```
 
-\newpage
+**Windows PowerShell**
 
-![](docs/assets/rebuild-guide/premium-local-run-playbook.png){width=7.3in}
+```powershell
+git --version
+py --version
+```
 
-\newpage
+Pass result: both commands print a version number, and Python is 3.11 or newer. If a command is not found, install the missing tool, reopen the terminal, and run the check again.
 
-# 5. Run Locally
+### Terminal habits that prevent mistakes
 
-Local setup is deliberately direct. The goal is to get one useful screen running before adding cloud services.
+1. Copy one command at a time.
+2. Paste it into the terminal and press Enter.
+3. Wait for it to finish before running the next command.
+4. Keep the terminal visible when the server is running; it is the app’s status window.
+5. If a command prints a red error, stop and capture the full error before trying random fixes.
 
-## Play-by-Play
+**AI Pro Tip:** Ask Copilot or ChatGPT: “Explain this command in plain English, tell me what success looks like, and give me only the next action. Do not change files.” Never paste passwords, keys, or the contents of `.env`.
+
+<!-- pagebreak -->
+
+## 3 Start on macOS
+
+The runtime owner should do these steps in order. The first run downloads Python packages and may take a few minutes.
+
+### Step 1 Open Terminal
+
+Open **Applications → Utilities → Terminal**. A prompt appears. The prompt is where you type; do not type the prompt characters themselves.
+
+### Step 2 Download the project
 
 ```bash
 git clone https://github.com/Esturban/microsoft-hackathon-riyadh-mobility.git
 cd microsoft-hackathon-riyadh-mobility
-python3 -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-cp .env.example .env
 ```
 
-Open `.env` and confirm the default local mode:
+Pass result: the prompt is now inside the project folder. If `cd` says the folder does not exist, run `ls` and check the spelling.
 
-```text
-DATA_MODE=sample
-```
-
-Start the app:
-
-```bash
-python -m uvicorn app.main:app --reload
-```
-
-Open the dashboard:
-
-```text
-http://127.0.0.1:8000
-```
-
-The first page load can take time. Wait for the district selector, layer controls, map container, and score panel area before deciding whether the app is loaded. If Azure Maps is not configured, the app should use the OpenStreetMap fallback and still show the route overlays.
-
-![Map layers screenshot](docs/assets/rebuild-guide/map-layers.png)
-
-*Figure: metro and bus layers rendered locally with OpenStreetMap fallback tiles.*
-
-\newpage
-
-![](docs/assets/rebuild-guide/premium-local-verification.png){width=7.3in}
-
-\newpage
-
-![](docs/assets/rebuild-guide/premium-api-contracts.png){width=7.3in}
-
-\newpage
-
-# 6. Backend Walkthrough
-
-The backend is a small FastAPI application. It serves both the API and the static frontend so the starter kit stays easy to run and easy to deploy.
-
-Read the API as four small contracts:
-
-- **Bootstrap:** `/health` and `/api/config` confirm app health and runtime settings.
-- **Map layers:** `/api/routes` and `/api/routes/geojson?mode=...` return route counts and map-ready geometry.
-- **District scoring:** `/api/districts` and `/api/score?districtId=...` drive the selector and score panel.
-- **Diagnostics:** `/api/live-events` and `/api/data-status` explain demo events, active data mode, and fallback behavior.
-
-![API data status screenshot](docs/assets/rebuild-guide/api-data-status.png)
-
-*Figure: `/api/data-status` confirms sample mode and explains the fallback path.*
-
-## Score Request Flow
-
-![Score request flow](docs/assets/rebuild-guide/diagram-score-request.png)
-
-The score formula stays on the backend so it can be tested and reused:
-
-```text
-score = (nearby metro count x 3) + nearby bus count - live delay penalty
-```
-
-Keep this formula easy to explain. Teams can later replace the weights or add new inputs such as parking, walkability, public services, heat, or event density.
-
-\newpage
-
-# 7. Frontend Walkthrough
-
-The frontend is a single-page application built with Vanilla JavaScript. This keeps the starter kit accessible to mixed-experience teams while still showing a complete app workflow.
-
-On startup, `app/static/src/main.js` fetches the core runtime data in parallel:
-
-```javascript
-const [config, routes, metro, bus, districts, events, dataStatus] = await Promise.all([
-  api.getConfig(),
-  api.getRoutes(),
-  api.getRouteGeojson("metro"),
-  api.getRouteGeojson("bus"),
-  api.getDistricts(),
-  api.getLiveEvents(),
-  api.getDataStatus(),
-]);
-```
-
-The map layer system makes the city data visible and explainable.
-
-| Layer | What it shows | Why it matters |
-|---|---|---|
-| Metro lines | high-capacity mobility corridors | shows structural transit coverage |
-| Bus routes | surface transit coverage | shows fine-grained network reach |
-| Districts | selectable district points | anchors the score conversation |
-| Live events | delay or incident markers | demonstrates cloud-live extension potential |
-| Accessibility buffer | rough selected-district service area | makes the score formula visible |
-
-![District selector screenshot](docs/assets/rebuild-guide/district-selector.png)
-
-The score panel translates raw counts into a judge-friendly story:
-
-- selected district name
-- score number
-- rating
-- nearby metro count
-- nearby bus count
-- live-event penalty
-- readable formula
-- active data source context
-
-![District score panel screenshot](docs/assets/rebuild-guide/district-score-panel.png)
-
-*Figure: district score panel after selecting a Riyadh district.*
-
-![](docs/assets/rebuild-guide/premium-cloud-deployment-blueprint.png){width=7.3in}
-
-\newpage
-
-# 8. Cloud-Live Deployment
-
-The cloud-live path is the deployable version of the same starter kit. It is useful when a team needs to show that the app can move beyond a laptop and into a credible Azure environment.
-
-## Prerequisites
-
-Before deploying, confirm:
-
-- Azure account is available.
-- Azure CLI is installed.
-- Azure Developer CLI is installed.
-- Shell is authenticated to the right Azure tenant and subscription.
-- Target location and resource group are known.
-- Local app and tests already pass.
-
-Sign in:
-
-```bash
-az login
-azd auth login
-azd init
-```
-
-Deploy with the helper:
-
-```bash
-bash scripts/deploy_azure.sh
-```
-
-Optional location and resource group:
-
-```bash
-bash scripts/deploy_azure.sh eastus rg-riyadh-ud-eastus
-```
-
-The helper prints active environment values, then runs the Azure Developer CLI deployment workflow.
-
-## What Deployment Creates
-
-| Azure resource | Role |
-|---|---|
-| Azure Container Apps | hosts FastAPI and the static frontend |
-| Azure Container Registry | stores the built container image |
-| Azure Maps account | supports cloud map services |
-| Azure Blob Storage | stores raw and processed mobility files |
-| Azure Cosmos DB | stores route, district, and event records |
-| Application Insights | tracks health, latency, failures, and requests |
-| Log Analytics | stores logs and diagnostics |
-
-After deployment:
-
-1. Copy `WEB_APP_URL` from `azd` output.
-2. Open the deployed app in a browser.
-3. Check `<WEB_APP_URL>/health`.
-4. Check `<WEB_APP_URL>/api/data-status`.
-5. Confirm the active data mode is expected.
-6. Upload processed files to Blob if using Blob mode.
-7. Seed Cosmos DB if using Cosmos mode.
-8. Inspect App Insights if the deployed app fails or loads slowly.
-
-Optional cloud data steps:
-
-```bash
-python3 scripts/upload_to_blob.py
-PYTHONPATH=. python3 scripts/seed_cosmos.py
-```
-
-Teardown when finished:
-
-```bash
-bash scripts/destroy_resource_group.sh --yes
-```
-
-The teardown script deletes the current Azure resource group and intentionally requires `--yes`.
-
-\newpage
-
-![](docs/assets/rebuild-guide/premium-track-adaptation-routes.png){width=7.3in}
-
-\newpage
-
-# 9. Starter Kit Adaptation Routes
-
-Treat this codebase as a scaffold. Teams should keep the working shell, replace the domain data, and adapt the score or map layers toward the track they are pursuing.
-
-## Route 1: Mobility Command View
-
-Best fit: Transformational Technology.
-
-Keep:
-
-- route layers
-- event overlay
-- district selector
-- route KPIs
-- data-status debugging
-
-Replace or add:
-
-- real congestion or delay source
-- parking demand layer
-- peak-load simulation
-- route delay explanations
-
-Likely Azure services: Azure Maps, Container Apps, Event Hubs, Stream Analytics, Cosmos DB, Application Insights.
-
-## Route 2: District Intelligence
-
-Best fit: Prosperous People.
-
-Keep:
-
-- district selector
-- scoring panel
-- map focus behavior
-- Cosmos-ready district records
-
-Replace or add:
-
-- service access layers such as clinics, schools, parks, or transit stops
-- 15-minute city score
-- walkability indicators
-- district comparison panel
-
-Likely Azure services: Azure Maps, Blob Storage, Cosmos DB, Container Apps, optional Azure OpenAI for plain-language score explanations.
-
-## Route 3: Sustainable Mobility Overlay
-
-Best fit: Sustainable Solutions.
-
-Keep:
-
-- mobility layers
-- selected district context
-- route scoring pattern
-- fallback-aware sample files
-
-Replace or add:
-
-- AQI stations
-- heat layer
-- pollution hotspot markers
-- clean corridor recommendations
-- emissions or low-carbon route scoring
-
-Likely Azure services: Azure Maps, Blob Storage, Cosmos DB, Power BI, Application Insights.
-
-## Route 4: Culture and Visitor Movement
-
-Best fit: Culture.
-
-Keep:
-
-- map layer structure
-- event markers
-- route overlays
-- selected place or district panel
-
-Replace or add:
-
-- heritage site markers
-- crowd-sensitive route suggestions
-- multilingual visitor notes
-- event-day access planning
-
-Likely Azure services: Azure Maps, Cosmos DB, Blob Storage, Container Apps, optional translation services.
-
-# 10. Demo Flow
-
-Use this short flow when presenting to mentors or judges.
-
-| Step | Show | Explain |
-|---:|---|---|
-| 1 | Dashboard landing view | This is a Riyadh mobility intelligence starter kit, not just a static map |
-| 2 | Metro and bus toggles | The map layers show public transport coverage |
-| 3 | District selector | District context drives the scoring workflow |
-| 4 | Score panel | The score is transparent and easy to adapt |
-| 5 | `/api/data-status` | The app is fallback-aware and cloud-live ready |
-| 6 | Azure workflow diagram | Services map to hosting, maps, files, records, and monitoring |
-| 7 | Adaptation routes | The same scaffold supports multiple hackathon tracks |
-
-Keep the live demo local unless the deployed app has already passed `/health` and `/api/data-status` checks.
-
-\newpage
-
-# Appendix
-
-## Common Commands
+### Step 3 Create the private Python toolbox
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env
-python -m uvicorn app.main:app --reload
-python -m pytest
-python scripts/validate_data.py
-bash scripts/deploy_azure.sh
-bash scripts/destroy_resource_group.sh --yes
 ```
 
-## Debugging Checklist
+Pass result: `(.venv)` appears at the start of the terminal prompt. You must repeat the `source` command each time you open a new terminal for this project.
 
-- If the page loads slowly, wait for the district selector, layer controls, map area, and score panel before judging success.
-- If the map is blank, clear `AZURE_MAPS_KEY` in `.env` and reload so the local fallback can be used.
-- If cloud data is missing, open `/api/data-status` first.
-- If sample files fail, run `python scripts/validate_data.py`.
-- If the deployed app fails, check `/health`, `/api/data-status`, Container App logs, and Application Insights.
+### Step 4 Install the app packages
 
-## Visual Asset Checklist
+```bash
+python -m pip install -r requirements.txt
+```
 
-| Asset | Included in this guide |
+Pass result: the command finishes without a red error. Warnings are usually okay; copy them to the handoff note if the app does not start.
+
+### Step 5 Create the local settings file
+
+```bash
+cp .env.example .env
+```
+
+The copied file uses `DATA_MODE=sample`. That is the correct setting for a workshop. Do not add Azure keys to this file unless the Azure owner tells you to.
+
+### Step 6 Start the dashboard
+
+```bash
+python -m uvicorn app.main:app --reload
+```
+
+Pass result: the terminal says `Uvicorn running on http://127.0.0.1:8000`. Leave this terminal open.
+
+### Step 7 Open the browser
+
+Open [http://127.0.0.1:8000](http://127.0.0.1:8000). If the page loads, continue to Section 5. To stop the server, return to Terminal and press `Ctrl+C`.
+
+<!-- pagebreak -->
+
+## 4 Start on Windows
+
+Use **PowerShell**, not the browser address bar. The runtime owner should copy one command at a time.
+
+### Step 1 Open PowerShell
+
+Open the Windows Start menu, search for **PowerShell**, and open it. A blue or black terminal window appears.
+
+### Step 2 Download the project
+
+```powershell
+git clone https://github.com/Esturban/microsoft-hackathon-riyadh-mobility.git
+cd microsoft-hackathon-riyadh-mobility
+```
+
+Pass result: the prompt is now inside the project folder. If `cd` says the folder does not exist, run `dir` and check the spelling.
+
+### Step 3 Create and activate the private Python toolbox
+
+```powershell
+py -3 -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+Pass result: `(.venv)` appears at the start of the PowerShell prompt. You must repeat the activation command each time you open a new PowerShell window for this project.
+
+If PowerShell says that running scripts is disabled, run this one-time command for the current window, then activate again:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.venv\Scripts\Activate.ps1
+```
+
+### Step 4 Install the app packages
+
+```powershell
+python -m pip install -r requirements.txt
+```
+
+Pass result: the command finishes without a red error. Warnings are usually okay; capture them if the app does not start.
+
+### Step 5 Create the local settings file
+
+```powershell
+Copy-Item .env.example .env
+```
+
+The copied file uses `DATA_MODE=sample`. Do not add Azure keys to this file unless the Azure owner tells you to.
+
+### Step 6 Start and open the dashboard
+
+```powershell
+python -m uvicorn app.main:app --reload
+```
+
+Leave the PowerShell window open. Open [http://127.0.0.1:8000](http://127.0.0.1:8000) in a browser. To stop the server, return to PowerShell and press `Ctrl+C`.
+
+<!-- pagebreak -->
+
+## 5 Prove the local app works
+
+Do not change code until these checks pass. A manager can perform the browser checks while the runtime owner watches the terminal.
+
+| Check | What to do | Pass result |
+|---|---|---|
+| Dashboard | Open `http://127.0.0.1:8000` | Riyadh map and controls appear |
+| Map layers | Turn Metro and Bus off, then on | Route overlays disappear and return |
+| District score | Choose a district | Rating and explanation update |
+| Health | Open `http://127.0.0.1:8000/health` | `{"status":"ok"}` |
+| Data source | Open `http://127.0.0.1:8000/api/data-status` | `activeMode` is `sample` |
+
+![Map layers showing metro bus routes and district markers](assets/rebuild-guide/map-layers.png){width=6.2in}
+
+*The local map remains useful when Azure Maps is not configured because it falls back to OpenStreetMap tiles.*
+
+### What the browser pages mean
+
+- `/health` answers one question: is the API alive?
+- `/api/data-status` answers: which data source is active? `sample` is expected locally.
+- `/api/districts` lists the districts available to the selector.
+- `/api/routes` lists the route summary used by the dashboard.
+
+Use this short demonstration flow:
+
+1. Show the dashboard landing page.
+2. Toggle Metro and Bus layers to explain the two transport views.
+3. Select a district and read the score explanation.
+4. Open `/api/data-status` and explain that sample data keeps the app working without cloud credentials.
+
+<!-- pagebreak -->
+
+## 6 Recover when something goes wrong
+
+Most first-run problems are a missing tool, the wrong folder, an inactive `.venv`, or a server that is not running. Use the first matching row and stop if the fix does not work.
+
+| What you see | First action | If it still fails |
+|---|---|---|
+| `command not found` or `not recognized` | Install the named tool, reopen the terminal, and rerun the version check | Ask IT or the runtime owner |
+| `destination path already exists` during `git clone` | Run `ls` or `dir`, then `cd` into the existing project folder | Ask the runtime owner before cloning a second copy |
+| `No such file or directory` after `cd` | Run `ls` on macOS or `dir` on Windows and check the folder name | Re-run the `git clone` step in a known folder |
+| `ModuleNotFoundError` | Activate `.venv`, then rerun `python -m pip install -r requirements.txt` | Capture the full error |
+| Browser says it cannot connect | Check that the Uvicorn terminal is still open and use port 8000 | Restart the server |
+| `Address already in use` | Run `python -m uvicorn app.main:app --reload --port 8001` and open port 8001 | Tell the manager which port you used |
+| PowerShell blocks `Activate.ps1` | Run the process-scoped policy command in Section 4 | Ask the runtime owner; do not change organisation-wide policy |
+| Map is blank | Set `AZURE_MAPS_KEY=` in `.env`, save, and restart | Check whether the OpenStreetMap fallback appears |
+| A code or data edit breaks the page | Stop the server and undo only the last edit in the editor | Ask the change owner to review the diff |
+| A cloud command asks for a subscription or deletes resources | Stop immediately | Give the command and full output to the Azure owner |
+
+### The support note to send
+
+When asking for help, send these five lines. Do not send passwords, keys, or the contents of `.env`.
+
+```text
+Computer: macOS or Windows
+Step I was on:
+Command I ran:
+What I expected:
+What actually happened and the full error:
+```
+
+**AI Pro Tip:** Paste only the support note into Copilot or ChatGPT and ask: “I am new to Python. Identify the likely cause, give me one safe next step, and tell me what result to expect.” If the first fix fails, stop and ask the runtime owner.
+
+<!-- pagebreak -->
+
+## 7 Make one safe change
+
+Make only one change at a time. Keep the local app working before and after the change. Do not deploy a change that has not passed the local checks.
+
+![Transit score panel showing the simple scoring formula](assets/rebuild-guide/district-score-panel.png){width=3.3in}
+
+*The score is intentionally transparent so teams can discuss and adapt the rule.*
+
+### First change the score weighting
+
+1. Stop the server with `Ctrl+C`.
+2. Open `app/scoring.py` in a text editor.
+3. Find this line:
+
+   ```python
+   score = (nearby_metro_count * 3) + nearby_bus_count - live_delay_penalty
+   ```
+
+4. Change only the `3` if you want metro access to count more or less. For example, change it to `2`.
+5. Save the file.
+6. Start the server again and select a district.
+7. Repeat every check in Section 5.
+
+### Record the change
+
+```bash
+git diff -- app/scoring.py
+python -m pytest
+```
+
+Pass result: the diff shows only the intended line and the tests pass. If the result is wrong, undo the last edit in the text editor, save, and repeat Section 5.
+
+### Rules for a first change
+
+- Change one file, not five files.
+- Do not change `.env` to a cloud mode.
+- Do not paste secret values into a document or chat.
+- Do not ask the Azure owner to deploy until the manager has seen the local result.
+
+**AI Pro Tip:** Before editing, ask Copilot: “Explain this scoring line in plain English and show a small example.” After editing, ask: “Review this diff for accidental changes; do not rewrite it.” A human still decides whether the change matches the workshop goal.
+
+<!-- pagebreak -->
+
+## 8 Change sample data safely
+
+Sample data is the workshop safety net. It lives in `app/static/sample-data/` and keeps the app useful without cloud credentials.
+
+| File | Contains | Beginner guidance |
+|---|---|---|
+| `riyadh_metro_lines_sample.geojson` | Six metro line features | Ask a technical reviewer before changing geometry |
+| `riyadh_bus_routes_sample.geojson` | Bus route features | Preserve valid GeoJSON structure |
+| `district_centers_sample.geojson` | Ten district points and names | Change one district record at a time |
+| `mock_live_events_sample.json` | Example delay or incident markers | Keep the JSON commas and quotes valid |
+
+### Safe data workflow
+
+1. In Finder or File Explorer, duplicate the original file and put the copy outside the project folder.
+2. Change one record in the sample file.
+3. Save the file.
+4. Run the validator:
+
+   ```bash
+   python scripts/validate_data.py
+   ```
+
+5. Start the local server and repeat Section 5.
+6. Run the tests:
+
+   ```bash
+   python -m pytest
+   ```
+
+7. Show the changed file and the command results to the manager.
+
+If validation fails, stop. The error names the file or property that needs review. Do not switch to `blob`, `cosmos`, or `auto` to hide a sample-data problem.
+
+### Files technical owners may need
+
+| Goal | Start here |
 |---|---|
-| app layer icon row | `docs/assets/rebuild-guide/icon-row-app-layers.png` |
-| four-track icon row | `docs/assets/rebuild-guide/icon-row-tracks.png` |
-| local dashboard screenshot | `docs/assets/rebuild-guide/local-dashboard.png` |
-| map layer screenshot | `docs/assets/rebuild-guide/map-layers.png` |
-| district selector screenshot | `docs/assets/rebuild-guide/district-selector.png` |
-| district score panel screenshot | `docs/assets/rebuild-guide/district-score-panel.png` |
-| data-status endpoint screenshot | `docs/assets/rebuild-guide/api-data-status.png` |
-| local workflow diagram | `docs/assets/rebuild-guide/diagram-local-first.png` |
-| Azure workflow diagram | `docs/assets/rebuild-guide/diagram-azure-backed.png` |
-| fallback chain diagram | `docs/assets/rebuild-guide/diagram-data-fallback.png` |
-| score request diagram | `docs/assets/rebuild-guide/diagram-score-request.png` |
+| Run the app | `app/main.py` |
+| Change the API | `app/routes.py` |
+| Change data fallback | `app/data_access.py` |
+| Change the score | `app/scoring.py` |
+| Change page or map interaction | `app/static/index.html` and `app/static/src/` |
+| Replace sample data | `app/static/sample-data/` |
+| Review Azure infrastructure | `azure.yaml` and `infra/` |
 
-## Resource Index
+<!-- pagebreak -->
 
-Use this page as the resource hub instead of repeating links in the footer. Keep the cover page focused on the repo, local app, and deployed app URL; keep this appendix focused on build, deployment, and Azure references.
+## 9 Run the demo and hand off
 
-| Need | Open |
+The manager can lead this section without opening the code editor.
+
+### Five minute demo
+
+1. Open the public dashboard or the verified local URL.
+2. Introduce the Riyadh map and the Metro and Bus layers.
+3. Select one district and explain that the score is a transparent workshop proxy, not a formal transport model.
+4. Open `/api/data-status` and show that the local demo uses bundled sample data.
+5. If the team changed anything, show the one changed file and the passing checks.
+
+### Names and ownership
+
+Write these down before the session ends.
+
+| Role | Name | Last confirmed |
+|---|---|---|
+| Manager or facilitator | ____________________ | ____________________ |
+| Runtime owner | ____________________ | ____________________ |
+| Change owner | ____________________ | ____________________ |
+| Azure owner | ____________________ | ____________________ |
+
+### Handoff checklist
+
+- Last successful local URL and the computer used.
+- Date and time of the last successful run.
+- `DATA_MODE` value in `.env` (`sample` for workshops).
+- Changed files and the result of `python -m pytest` plus `python scripts/validate_data.py`.
+- Public URL, target subscription, resource group, region, and cost owner if Azure is in use.
+- The full support note if a check failed.
+
+<!-- pagebreak -->
+
+## 10 Azure owner only
+
+This is the only section that can create billable cloud resources. A beginner should not run it alone. If the team only needs a demo, stop at Section 9.
+
+### Current shared deployment
+
+The verified public dashboard is running on the **Riyadh Urban Hackathon** subscription. The target resource group is `rg-riyadh-ud-uae-north` in **UAE North**. The Bicep deployment keeps Azure Maps global; its account is `maps-riyadh-mobility-riyadh-ud-uae-north`. The West US 2 source group has been decommissioned after the replacement health and data-status checks passed.
+
+```text
+https://ca-rmd-api-riyadh-ud-ua-aesdq5.jollyplant-57daa6ab.uaenorth.azurecontainerapps.io/
+```
+
+Its health endpoint is:
+
+```text
+https://ca-rmd-api-riyadh-ud-ua-aesdq5.jollyplant-57daa6ab.uaenorth.azurecontainerapps.io/health
+```
+
+Use the public dashboard for sharing and the local dashboard for making changes safely.
+
+### Before deployment
+
+1. Confirm the local checks in Section 5 pass.
+2. Confirm the target subscription is **Riyadh Urban Hackathon**.
+3. Confirm the target resource group and region with the budget owner.
+4. Confirm that the person running the commands has the required Azure role.
+5. Record the expected deployment owner and teardown date.
+
+```bash
+az login
+azd auth login
+az account set --subscription "Riyadh Urban Hackathon"
+az account show --output table
+azd env select riyadh-ud-uae-north
+azd env get-values
+```
+
+Stop if `az account show` displays the wrong subscription or if the resource group is not the agreed target.
+
+**AI Pro Tip:** AI can translate Azure CLI output into plain language. Ask: “Compare this account output with the target subscription and resource group. Tell me what looks wrong; do not run commands.” The Azure owner must make the decision and approve every deploy or teardown action.
+
+### Deploy and verify
+
+```bash
+bash scripts/deploy_azure.sh uaenorth rg-riyadh-ud-uae-north
+```
+
+After deployment, open the URL printed as `WEB_APP_URL`, then check:
+
+- the dashboard loads;
+- `/health` returns `{"status":"ok"}`;
+- `/api/data-status` shows the intended active mode;
+- the Azure owner records the URL and deployment time.
+
+Do not create duplicate resource groups just to retry a failed deployment. Do not run a cleanup or destroy command from a beginner laptop. Teardown belongs to the Azure owner and budget owner; use `docs/azure_deployment.md` for the controlled process.
+
+<!-- pagebreak -->
+
+## Appendix Command cheat sheet and help
+
+### Start again later
+
+**macOS**
+
+```bash
+cd microsoft-hackathon-riyadh-mobility
+source .venv/bin/activate
+python -m uvicorn app.main:app --reload
+```
+
+**Windows PowerShell**
+
+```powershell
+cd microsoft-hackathon-riyadh-mobility
+.venv\Scripts\Activate.ps1
+python -m uvicorn app.main:app --reload
+```
+
+### Stop the local server
+
+Return to the terminal that shows Uvicorn and press `Ctrl+C`. Closing the browser does not stop the server; closing the terminal does.
+
+### Run the two project checks
+
+```bash
+python -m pytest
+python scripts/validate_data.py
+```
+
+### What not to do
+
+- Do not put secrets in the repository or the runbook.
+- Do not change cloud settings while trying to fix a local sample-data problem.
+- Do not delete a resource group to solve a code error.
+- Do not deploy until the local browser checks pass.
+- Do not report success based only on a command finishing; open the URL and check the result.
+
+### Safe AI prompts
+
+| Need | Prompt to copy |
 |---|---|
-| GitHub repo | [github.com/Esturban/microsoft-hackathon-riyadh-mobility](https://github.com/Esturban/microsoft-hackathon-riyadh-mobility) |
-| Local dashboard | [http://127.0.0.1:8000](http://127.0.0.1:8000) |
-| atomcamp Arabia | [atomcamparabia.com](https://atomcamparabia.com/) |
-| Azure Developer CLI docs | [Microsoft Learn](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/) |
-| `azd up` workflow | [Microsoft Learn](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/azd-up-workflow) |
-| Azure Container Apps docs | [Microsoft Learn](https://learn.microsoft.com/en-us/azure/container-apps/overview) |
-| Azure Maps docs | [Microsoft Learn](https://learn.microsoft.com/en-us/azure/azure-maps/) |
-| Azure Cosmos DB docs | [Microsoft Learn](https://learn.microsoft.com/en-us/cosmos-db/) |
-| Student quickstart | `README.md` |
-| Architecture notes | `docs/architecture.md` |
-| Azure deployment notes | `docs/azure_deployment.md` |
-| Data source notes | `docs/data_sources.md` |
-| Troubleshooting | `docs/troubleshooting.md` |
-| Demo script | `docs/judging_demo_script.md` |
+| Understand a command | “Explain this command for a non-technical manager. What does it change, and what should I see if it worked?” |
+| Understand an error | “Here is the red error text. Give me one safe next step and the expected result. Do not suggest deleting files or cloud resources.” |
+| Understand a code change | “Explain this diff in plain English. List any unintended changes. Do not rewrite the code.” |
+| Prepare a handoff | “Turn these non-secret test results into a five-line handoff note with owner, URL, change, checks, and next action.” |
 
-## Glossary
+AI is a reading and explanation aid. It is not the approval path for Azure subscriptions, deployments, secrets, or resource deletion.
 
-**Azure-backed live path**  
-The deployable path where the starter kit uses Azure services for maps, hosting, files, records, and monitoring.
+### Where to look next
 
-**Blob Storage**  
-Azure file storage for raw and processed mobility datasets.
-
-**Cosmos DB**  
-Azure document database for route summaries, district records, and event records.
-
-**FastAPI**  
-Python web framework used to serve the API and static frontend.
-
-**GeoJSON**  
-JSON format for map features such as points, lines, and polygons.
-
-**Mobility Intelligence Starter Kit**  
-The reusable scaffold that teams can adapt into mobility, district, sustainability, or culture prototypes.
-
-**Sample fallback**  
-The local files that keep the app useful even when cloud services or remote data are unavailable.
-
-**Single-page application**  
-The current frontend shape: one main web page that loads data and updates panels dynamically.
-
-# Closing Note
-
-The starter kit is strongest when it stays practical: one useful local screen, clear route layers, transparent scoring, and a cloud-live path that is credible without becoming heavy. Build the smallest version that can be explained well, then extend it toward the hackathon track that matters most.
+Use `docs/local_setup.md` for the short technical setup, `docs/troubleshooting.md` for deeper diagnostics, `docs/azure_deployment.md` for controlled cloud operations, and `docs/data_sources.md` for data provenance.

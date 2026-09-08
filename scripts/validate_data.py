@@ -4,7 +4,6 @@ import json
 import sys
 from pathlib import Path
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 SAMPLE_DIR = BASE_DIR / "app" / "static" / "sample-data"
 
@@ -51,6 +50,6 @@ if __name__ == "__main__":
         validate_route_properties("riyadh_metro_lines_sample.geojson")
         validate_route_properties("riyadh_bus_routes_sample.geojson")
         validate_district_properties()
-    except Exception as exc:
+    except (OSError, ValueError) as exc:
         print(f"validation failed: {exc}")
         sys.exit(1)

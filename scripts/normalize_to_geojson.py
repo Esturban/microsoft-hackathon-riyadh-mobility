@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 RAW_DIR = BASE_DIR / "data" / "raw"
 PROCESSED_DIR = BASE_DIR / "data" / "processed"
@@ -38,7 +37,12 @@ def canonical_properties(raw_name: str, record: dict) -> dict:
             "source": "rcrc",
         }
 
-    route_code = str(record.get("busroutecode") or record.get("busroute") or record.get("index") or "bus")
+    route_code = str(
+        record.get("busroutecode")
+        or record.get("busroute")
+        or record.get("index")
+        or "bus"
+    )
     origin = record.get("origin")
     destination = record.get("destination")
     route_name = f"Bus {route_code}"
@@ -66,7 +70,11 @@ def normalize_file(raw_name: str, output_name: str) -> None:
         geometry = detect_geometry(record)
         if not geometry:
             continue
-        properties = {k: v for k, v in record.items() if k not in {"geometry", "geo_shape", "geoshape", "shape"}}
+        properties = {
+            k: v
+            for k, v in record.items()
+            if k not in {"geometry", "geo_shape", "geoshape", "shape"}
+        }
         properties.update(canonical_properties(raw_name, record))
         features.append(
             {

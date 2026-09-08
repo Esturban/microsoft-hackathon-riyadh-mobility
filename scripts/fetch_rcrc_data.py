@@ -5,7 +5,6 @@ from pathlib import Path
 
 import httpx
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 RAW_DIR = BASE_DIR / "data" / "raw"
 
@@ -22,7 +21,7 @@ def fetch_dataset(name: str, url: str) -> None:
         response.raise_for_status()
         output.write_text(json.dumps(response.json(), indent=2), encoding="utf-8")
         print(f"saved {name} -> {output}")
-    except Exception as exc:
+    except (httpx.HTTPError, json.JSONDecodeError, OSError) as exc:
         print(f"failed {name}: {exc}")
 
 

@@ -5,6 +5,8 @@ import logging
 from collections.abc import Iterable
 from pathlib import Path
 
+from azure.core.exceptions import AzureError
+
 from .azure_clients import get_blob_service_client, get_cosmos_database_client
 from .config import get_settings
 from .scoring import compute_accessibility_score, compute_delay_penalty
@@ -48,7 +50,11 @@ def _load_blob_json(blob_name: str):
         full_name = f"{settings.blob_geojson_prefix}{blob_name}"
         payload = container.download_blob(full_name).readall()
         return json.loads(payload)
-    except Exception as exc:  # pragma: no cover - network dependency
+    except (
+        AzureError,
+        json.JSONDecodeError,
+        UnicodeDecodeError,
+    ) as exc:  # pragma: no cover - network dependency
         logger.warning("Blob fallback triggered for %s: %s", blob_name, exc)
         return None
 
@@ -59,9 +65,11 @@ def _query_cosmos_items(container_name: str) -> list[dict] | None:
         return None
     try:
         container = db.get_container_client(container_name)
-        items = list(container.query_items("SELECT * FROM c", enable_cross_partition_query=True))
+        items = list(
+            container.query_items("SELECT * FROM c", enable_cross_partition_query=True)
+        )
         return items
-    except Exception as exc:  # pragma: no cover - network dependency
+    except AzureError as exc:  # pragma: no cover - network dependency
         logger.warning("Cosmos fallback triggered for %s: %s", container_name, exc)
         return None
 
@@ -166,8 +174,8 @@ def load_districts() -> tuple[list[dict], str]:
         if _prefers_mode("blob", "auto", "cosmos")
         else None
     )
-    geojson, source = (blob_payload, "blob") if blob_payload else _load_sample_geojson(
-        "districts"
+    geojson, source = (
+        (blob_payload, "blob") if blob_payload else _load_sample_geojson("districts")
     )
 
     metro_geojson, _ = load_route_geojson("metro")
@@ -191,16 +199,16 @@ def load_districts() -> tuple[list[dict], str]:
         )
         score_data = compute_accessibility_score(metro_count, bus_count, delay_penalty)
         doc = {
-                "id": f"district-{props['districtId']}",
-                "districtId": props["districtId"],
-                "name": props["name"],
-                "center": {"lat": lat, "lon": lon},
-                "nearbyMetroCount": metro_count,
-                "nearbyBusCount": bus_count,
-                "accessibilityScore": score_data["score"],
-                "accessibilityRating": score_data["rating"],
-                "lastCalculatedUtc": "2026-05-24T00:00:00Z",
-            }
+            "id": f"district-{props['districtId']}",
+            "districtId": props["districtId"],
+            "name": props["name"],
+            "center": {"lat": lat, "lon": lon},
+            "nearbyMetroCount": metro_count,
+            "nearbyBusCount": bus_count,
+            "accessibilityScore": score_data["score"],
+            "accessibilityRating": score_data["rating"],
+            "lastCalculatedUtc": "2026-05-24T00:00:00Z",
+        }
         if props.get("nameAr"):
             doc["nameAr"] = props["nameAr"]
         if props.get("description"):

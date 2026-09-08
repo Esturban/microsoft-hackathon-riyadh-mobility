@@ -2,7 +2,15 @@
 
 Map Riyadh metro and bus routes, select districts, and calculate a mobility access score.
 
-The app includes a FastAPI backend, a vanilla JavaScript frontend, bundled sample data, and an optional Azure deployment path.
+Built for atomcamp Arabia and the Microsoft Riyadh Urban Hackathon. The app includes a FastAPI backend, a vanilla JavaScript frontend, bundled sample data, and an optional Azure deployment path.
+
+## Live Dashboard
+
+The verified public deployment is available at [Riyadh Mobility Dashboard](https://ca-rmd-api-riyadh-ud-ua-aesdq5.jollyplant-57daa6ab.uaenorth.azurecontainerapps.io/).
+
+- Health check: [`/health`](https://ca-rmd-api-riyadh-ud-ua-aesdq5.jollyplant-57daa6ab.uaenorth.azurecontainerapps.io/health)
+- Data status: [`/api/data-status`](https://ca-rmd-api-riyadh-ud-ua-aesdq5.jollyplant-57daa6ab.uaenorth.azurecontainerapps.io/api/data-status)
+- Local work remains the recommended place to make and test changes.
 
 ## What You Build
 
@@ -18,6 +26,10 @@ Need the full build guide?
 
 - `docs/rebuild_guide.md`
 - `docs/rebuild_guide.docx`
+
+The guide assigns manager, runtime, change, and Azure-owner responsibilities so mixed-experience teams can work from the same checklist.
+
+For a first run, open the DOCX and follow Sections 1–5. Skip the Azure section unless you are the named Azure owner.
 
 Open `docs/README.md` for architecture, testing, deployment, data, and demo notes.
 
@@ -139,7 +151,7 @@ Deploy:
 bash scripts/deploy_azure.sh
 ```
 
-Open the `WEB_APP_URL` from the `azd` output.
+Open the `WEB_APP_URL` from the `azd` output. The current shared public deployment is [Riyadh Mobility Dashboard](https://ca-rmd-api-riyadh-ud-ua-aesdq5.jollyplant-57daa6ab.uaenorth.azurecontainerapps.io/).
 
 Delete the current Azure resource group when finished:
 

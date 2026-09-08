@@ -4,7 +4,6 @@ from functools import lru_cache
 
 from .config import get_settings
 
-
 try:
     from azure.cosmos import CosmosClient
 except ImportError:  # pragma: no cover - optional dependency at runtime

@@ -23,14 +23,18 @@ app.add_middleware(
 )
 app.include_router(router)
 app.mount("/src", StaticFiles(directory=STATIC_DIR / "src"), name="src")
-app.mount("/sample-data", StaticFiles(directory=STATIC_DIR / "sample-data"), name="sample-data")
+app.mount(
+    "/sample-data",
+    StaticFiles(directory=STATIC_DIR / "sample-data"),
+    name="sample-data",
+)
 
 
 @app.middleware("http")
 async def disable_frontend_caching(request: Request, call_next):
     response = await call_next(request)
     path = request.url.path
-    if path == "/" or path.startswith("/src/") or path.startswith("/sample-data/"):
+    if path == "/" or path.startswith(("/src/", "/sample-data/")):
         response.headers["Cache-Control"] = "no-store, max-age=0"
         response.headers["Pragma"] = "no-cache"
     return response
