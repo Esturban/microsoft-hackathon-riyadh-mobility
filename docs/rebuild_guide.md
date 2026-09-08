@@ -95,7 +95,7 @@ git --version
 py --version
 ```
 
-Pass result: both commands print a version number, and Python is 3.11 or newer. If a command is not found, install the missing tool, reopen the terminal, and run the check again.
+Pass result: both commands print a version number, and Python is 3.11 or newer. If a command is not found, install the missing tool, reopen the terminal, and run the check again. If Windows says `py` is not recognised, type `python` instead in every command; Command Prompt works as well as PowerShell.
 
 ### Terminal habits that prevent mistakes
 
@@ -300,14 +300,14 @@ Make only one change at a time. Keep the local app working before and after the 
 ### First change the score weighting
 
 1. Stop the server with `Ctrl+C`.
-2. Open `app/scoring.py` in a text editor.
+2. Open `app/scoring.py` in Visual Studio Code (File, Open Folder, pick the project folder, then click the file). Notepad on Windows or TextEdit in plain text mode on macOS also work.
 3. Find this line:
 
    ```python
    score = (nearby_metro_count * 3) + nearby_bus_count - live_delay_penalty
    ```
 
-4. Change only the `3` if you want metro access to count more or less. For example, change it to `2`.
+4. Change only the `3` if you want metro access to count more or less. For example, change it to `2`. The tests expect the weight 3, so `python -m pytest` now fails on the scoring test on purpose; that is the check working. Put the 3 back, or change the expected value in the test, before you hand off.
 5. Save the file.
 6. Start the server again and select a district.
 7. Repeat every check in Section 5.
