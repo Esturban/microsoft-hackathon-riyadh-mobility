@@ -71,15 +71,7 @@ After the server starts:
 
 ## npm Shortcuts
 
-If you have Node.js installed, these npm scripts wrap the common commands:
-
-```bash
-npm test               # run the pytest suite
-npm run validate:data  # validate sample data file shapes
-npm run fetch:data     # fetch raw RCRC data (requires network)
-npm run normalize:data # normalize raw data to GeoJSON
-npm run deploy:azure   # deploy to Azure with azd
-```
+If you have Node.js installed, `package.json` wraps the common commands (test, validate:data, fetch:data, normalize:data, deploy:azure). See the README for the project overview. The Day 2 walkthrough lives in `docs/rebuild_guide.md`, not here.
 
 ---
 
