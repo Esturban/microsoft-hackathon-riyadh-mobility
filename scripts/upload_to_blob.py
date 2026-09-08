@@ -3,9 +3,9 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+from azure.core.exceptions import ResourceExistsError
 from azure.identity import DefaultAzureCredential
 from azure.storage.blob import BlobServiceClient
-
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 RAW_DIR = BASE_DIR / "data" / "raw"
@@ -17,15 +17,17 @@ def get_blob_service_client() -> BlobServiceClient:
     if connection_string:
         return BlobServiceClient.from_connection_string(connection_string)
     account_url = os.environ["AZURE_STORAGE_ACCOUNT_URL"]
-    return BlobServiceClient(account_url=account_url, credential=DefaultAzureCredential())
+    return BlobServiceClient(
+        account_url=account_url, credential=DefaultAzureCredential()
+    )
 
 
 def upload_dir(directory: Path, container_name: str) -> None:
     client = get_blob_service_client().get_container_client(container_name)
     try:
         client.create_container()
-    except Exception:
-        pass
+    except ResourceExistsError:
+        print(f"using existing {container_name} container")
     for file_path in directory.glob("*"):
         if not file_path.is_file():
             continue

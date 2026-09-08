@@ -6,10 +6,12 @@ param containerImage string = 'mcr.microsoft.com/azuredocs/containerapps-hellowo
 param enableEventHubs bool = false
 
 var envSlug = toLower(replace(envName, '_', '-'))
+var cosmosEnvSlug = take(replace(envSlug, '-', ''), 7)
 var suffix = uniqueString(resourceGroup().id, envName)
 var storageName = 'striyadh${take(suffix, 15)}'
-var cosmosName = 'cosmos-riyadh-mobility-${envSlug}'
+var cosmosName = 'cosmos-rmd-${cosmosEnvSlug}-${suffix}'
 var mapsName = 'maps-riyadh-mobility-${envSlug}'
+var mapsLocation = 'global'
 var logName = 'log-riyadh-mobility-${envSlug}'
 var appInsightsName = 'appi-riyadh-mobility-${envSlug}'
 var containerEnvName = 'cae-riyadh-mobility-${envSlug}'
@@ -47,7 +49,7 @@ module cosmos './modules/cosmos.bicep' = {
 module maps './modules/maps.bicep' = {
   name: 'maps'
   params: {
-    location: location
+    location: mapsLocation
     accountName: mapsName
   }
 }

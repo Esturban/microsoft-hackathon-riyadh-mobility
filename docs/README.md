@@ -2,13 +2,19 @@
 
 Use this folder for build, deployment, testing, and architecture notes.
 
+## Shared Dashboard
+
+The verified public Azure deployment is [Riyadh Mobility Dashboard](https://ca-rmd-api-riyadh-ud-ua-aesdq5.jollyplant-57daa6ab.uaenorth.azurecontainerapps.io/). It runs in UAE North with Azure Maps kept global. Use the local path for development; use the shared URL for a ready-to-show demo.
+
 ## Start Here
 
 | Open | When you need |
 |---|---|
 | `../README.md` | student quickstart and common run/deploy commands |
-| `rebuild_guide.md` | build steps and adaptation notes |
-| `rebuild_guide.docx` | printable build guide |
+| `rebuild_guide.md` | visual team runbook with setup, roles, checks, and handoff |
+| `rebuild_guide.docx` | printable visual team runbook |
+
+Beginner path: assign the team in Section 1, complete the local setup and checks in Sections 2–5, then use the change and handoff sections only as needed. Azure deployment is restricted to the named Azure owner in Section 10.
 
 ## Build And Operate
 

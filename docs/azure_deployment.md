@@ -1,5 +1,18 @@
 # Azure Deployment
 
+## Current Shared Dashboard
+
+The verified public deployment is [Riyadh Mobility Dashboard](https://ca-rmd-api-riyadh-ud-ua-aesdq5.jollyplant-57daa6ab.uaenorth.azurecontainerapps.io/). It runs in `rg-riyadh-ud-uae-north` in UAE North. Azure Maps is deliberately provisioned in the `global` location as `maps-riyadh-mobility-riyadh-ud-uae-north`.
+
+Confirm its health and active data path before sharing it:
+
+```text
+https://ca-rmd-api-riyadh-ud-ua-aesdq5.jollyplant-57daa6ab.uaenorth.azurecontainerapps.io/health
+https://ca-rmd-api-riyadh-ud-ua-aesdq5.jollyplant-57daa6ab.uaenorth.azurecontainerapps.io/api/data-status
+```
+
+Use the local dashboard for development. Treat deployment and teardown as Azure-owner responsibilities because they can create or remove billable resources.
+
 ## Prerequisites
 
 1. Install Azure CLI and Azure Developer CLI.
@@ -15,13 +28,15 @@ Run this helper script to show the active environment values before deployment:
 bash scripts/deploy_azure.sh
 ```
 
-You can also set the location and resource group in the same command:
+To deploy the shared UAE North environment, select it and confirm its values first:
 
 ```bash
-bash scripts/deploy_azure.sh eastus rg-riyadh-ud-eastus
+azd env select riyadh-ud-uae-north
+azd env get-values
+bash scripts/deploy_azure.sh uaenorth rg-riyadh-ud-uae-north
 ```
 
-The script updates `AZURE_LOCATION` and `AZURE_RESOURCE_GROUP` when you pass arguments, prints `azd env get-values`, and then runs `azd up`.
+The script updates `AZURE_LOCATION` and `AZURE_RESOURCE_GROUP` only when you pass arguments, prints `azd env get-values`, and then runs `azd up`. Do not point the migration environment at a shared or unrelated resource group.
 
 ## Deployment Workflow
 
@@ -29,6 +44,11 @@ The script updates `AZURE_LOCATION` and `AZURE_RESOURCE_GROUP` when you pass arg
 2. Keep the same `azd` environment for the full demo cycle.
 3. Run `azd env get-values` before each deploy so you can confirm the target resource group.
 4. Use the deployed app for cloud smoke tests only, and do most iteration locally.
+5. Keep all regional resources in UAE North; the `infra/modules/maps.bicep` module is the intentional exception and deploys Azure Maps in `global`.
+
+## Migration record
+
+The dashboard moved from `rg-riyadh-urban-hackathon-wus2` in West US 2 to `rg-riyadh-ud-uae-north` in UAE North. The UAE North deployment was checked at `/health` and `/api/data-status` before deletion of the West US 2 source group was submitted. The old Azure Maps account is removed with the West US 2 group; the replacement Maps account above is the global service retained for the dashboard.
 
 ## Spin down the whole resource group
 

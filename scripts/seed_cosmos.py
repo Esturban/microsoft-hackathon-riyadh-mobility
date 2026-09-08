@@ -5,8 +5,9 @@ import os
 from pathlib import Path
 
 from azure.cosmos import CosmosClient
-from app.scoring import compute_accessibility_score, compute_delay_penalty, haversine_km
+from azure.cosmos.exceptions import CosmosResourceNotFoundError
 
+from app.scoring import compute_accessibility_score, compute_delay_penalty, haversine_km
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 PROCESSED_DIR = BASE_DIR / "data" / "processed"
@@ -20,18 +21,22 @@ def load_json(path: Path):
 def get_database():
     endpoint = os.environ["COSMOS_ENDPOINT"]
     key = os.environ["COSMOS_KEY"]
-    database_name = os.getenv("COSMOS_DATABASE", os.getenv("COSMOS_DATABASE_NAME", "mobilitydb"))
+    database_name = os.getenv(
+        "COSMOS_DATABASE", os.getenv("COSMOS_DATABASE_NAME", "mobilitydb")
+    )
     client = CosmosClient(endpoint, credential=key)
     return client.create_database_if_not_exists(id=database_name)
 
 
-def upsert_documents(container_name: str, partition_key: str, documents: list[dict]) -> None:
+def upsert_documents(
+    container_name: str, partition_key: str, documents: list[dict]
+) -> None:
     db = get_database()
     try:
         db.delete_container(container_name)
         print(f"reset {container_name}")
-    except Exception:
-        pass
+    except CosmosResourceNotFoundError:
+        print(f"no existing {container_name} container to reset")
     container = db.create_container_if_not_exists(
         id=container_name,
         partition_key={"paths": [partition_key], "kind": "Hash"},
@@ -47,9 +52,14 @@ def build_route_docs() -> list[dict]:
         "metro": SAMPLE_DIR / "riyadh_metro_lines_sample.geojson",
         "bus": SAMPLE_DIR / "riyadh_bus_routes_sample.geojson",
     }
-    for mode, file_name in (("metro", "metro_lines.geojson"), ("bus", "bus_routes.geojson")):
+    for mode, file_name in (
+        ("metro", "metro_lines.geojson"),
+        ("bus", "bus_routes.geojson"),
+    ):
         processed_path = PROCESSED_DIR / file_name
-        payload = load_json(processed_path if processed_path.exists() else sample_file_map[mode])
+        payload = load_json(
+            processed_path if processed_path.exists() else sample_file_map[mode]
+        )
         source = "rcrc" if processed_path.exists() else "sample"
         for feature in payload.get("features", []):
             props = feature.get("properties", {})
@@ -84,7 +94,9 @@ def iter_feature_points(feature: dict):
                 yield tuple(point)
 
 
-def count_nearby_features(geojson: dict, lat: float, lon: float, buffer_km: float) -> int:
+def count_nearby_features(
+    geojson: dict, lat: float, lon: float, buffer_km: float
+) -> int:
     count = 0
     for feature in geojson.get("features", []):
         for point_lon, point_lat in iter_feature_points(feature):
@@ -98,10 +110,14 @@ def build_district_docs() -> list[dict]:
     metro_processed = PROCESSED_DIR / "metro_lines.geojson"
     bus_processed = PROCESSED_DIR / "bus_routes.geojson"
     metro = load_json(
-        metro_processed if metro_processed.exists() else SAMPLE_DIR / "riyadh_metro_lines_sample.geojson"
+        metro_processed
+        if metro_processed.exists()
+        else SAMPLE_DIR / "riyadh_metro_lines_sample.geojson"
     )
     bus = load_json(
-        bus_processed if bus_processed.exists() else SAMPLE_DIR / "riyadh_bus_routes_sample.geojson"
+        bus_processed
+        if bus_processed.exists()
+        else SAMPLE_DIR / "riyadh_bus_routes_sample.geojson"
     )
     events = load_json(SAMPLE_DIR / "mock_live_events_sample.json")
     payload = load_json(SAMPLE_DIR / "district_centers_sample.geojson")

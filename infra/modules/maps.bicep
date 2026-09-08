@@ -1,4 +1,4 @@
-param location string
+param location string = 'global'
 param accountName string
 
 resource maps 'Microsoft.Maps/accounts@2023-06-01' = {

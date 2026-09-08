@@ -171,8 +171,11 @@ Expected: `{"status":"ok","version":"..."}` within 3 seconds.
 # tests/test_my_feature.py
 from app.scoring import compute_accessibility_score
 
+
 def test_my_case():
-    result = compute_accessibility_score(nearby_metro_count=1, nearby_bus_count=3, live_delay_penalty=0)
+    result = compute_accessibility_score(
+        nearby_metro_count=1, nearby_bus_count=3, live_delay_penalty=0
+    )
     assert result["score"] == 6
     assert result["rating"] == "Medium"
 ```
@@ -184,6 +187,7 @@ from fastapi.testclient import TestClient
 from app.main import app
 
 client = TestClient(app)
+
 
 def test_my_endpoint():
     response = client.get("/api/my-endpoint")
@@ -199,6 +203,7 @@ import json
 from pathlib import Path
 
 SAMPLE_DIR = Path(__file__).resolve().parent.parent / "app" / "static" / "sample-data"
+
 
 def test_my_sample_file():
     payload = json.loads((SAMPLE_DIR / "my_file.geojson").read_text())
